@@ -61,7 +61,7 @@ const FirebaseLogin = ({ ...others }) => {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
       
 try {
-  const response = await axios.post('https://localhost:44344/api/Auth/login', {
+  const response = await axios.post('https://localhost:44344/api/Auth/case/login', {
     username: values.email,
     password: values.password,
   }, {

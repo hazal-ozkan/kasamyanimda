@@ -33,7 +33,14 @@ const Header = ({ handleLeftDrawerToggle }) => {
         <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
           <LogoSection />
         </Box>
-        <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+        <ButtonBase sx={{
+    border: 'none',
+    overflow: 'hidden',
+    '&:focus, &:active': {
+      outline: 'none',
+      border: 'none',
+    },
+  }}>
           <Avatar
             variant="rounded"
             sx={{

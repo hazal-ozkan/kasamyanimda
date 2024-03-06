@@ -12,42 +12,42 @@ const bills = {
  type: 'group',
  children: [
    {
-     id: 'bills',
+     id: 'incomingBills',
      title: 'Gelen Faturalar',
      type: 'item',
-     url: '/bills',
+     url: '/incomingBills',
      icon: icons.IconReceipt,
      breadcrumbs: false
    },
    {
-    id: 'bills',
+    id: 'outcomingBills',
     title: 'Giden Faturalar',
-    type: 'item',
-    url: '/bills',
+    type: 'item', 
+    url: '/outcomingBills',
     icon: icons.IconReceipt,
     breadcrumbs: false
   },
   {
-    id: 'bills',
+    id: 'PurchaseBills',
     title: 'Alış Faturaları',
     type: 'item',
-    url: '/bills',
+    url: '/PurchaseBills',
     icon: icons.IconReceipt,
     breadcrumbs: false
   },
   {
-    id: 'bills',
+    id: 'ebills',
     title: 'E-Fatura Oluştur',
     type: 'item',
-    url: '/bills',
+    url: '/ebills',
     icon: icons.IconReceipt,
     breadcrumbs: false
   },
   {
-    id: 'bills',
+    id: 'createPurchaseBills',
     title: 'Alış Faturası Oluştur',
     type: 'item',
-    url: '/bills',
+    url: '/createPurchaseBills',
     icon: icons.IconReceipt,
     breadcrumbs: false
   },

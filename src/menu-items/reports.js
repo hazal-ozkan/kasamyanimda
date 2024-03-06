@@ -12,34 +12,34 @@ const reports = {
  type: 'group',
  children: [
   {
-    id: 'reports',
+    id: 'dailyReports',
     title: 'Günlük Rapor',
     type: 'item',
-    url: '/reports',
+    url: '/dailyReports',
     icon: icons.IconReportAnalytics,
     breadcrumbs: false
   },
   {
-    id: 'reports',
+    id: 'montlyReports',
     title: 'Aylık Rapor',
     type: 'item',
-    url: '/reports',
+    url: '/montlyReports',
     icon: icons.IconReportAnalytics,
     breadcrumbs: false
   },
   {
-    id: 'reports',
+    id: 'yearlyReports',
     title: 'Yılllık Rapor',
     type: 'item',
-    url: '/reports',
+    url: '/yearlyReports',
     icon: icons.IconReportAnalytics,
     breadcrumbs: false
   },
    {
-     id: 'reports',
+     id: 'productsMoveReports',
      title: 'Ürün Hareketleri Raporu',
      type: 'item',
-     url: '/reports',
+     url: '/productsMoveReports',
      icon: icons.IconReportAnalytics,
      breadcrumbs: false
    },

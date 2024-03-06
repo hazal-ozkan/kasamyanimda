@@ -11,6 +11,7 @@ import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
+import PersonalPieChart from './personal-pie-chart';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -44,11 +45,17 @@ const Dashboard = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={7}>
             <TotalGrowthBarChart isLoading={isLoading} />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={5}>
+            <Grid>
             <PopularCard isLoading={isLoading} />
+            </Grid>
+          <Grid marginTop={4}>
+          <PersonalPieChart/>
+          </Grid>
+           
           </Grid>
         </Grid>
       </Grid>

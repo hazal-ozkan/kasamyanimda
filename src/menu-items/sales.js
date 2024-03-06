@@ -9,12 +9,12 @@ const iconDollar = { IconUserDollar };
 
 const sales = {
   id: 'sales',
-  
+  title:'Satış',
   type: 'group',
   children: [
     {
       id: 'sales',
-      title: 'Satış',
+      title: 'Satış Ekranı',
       type: 'item',
       url: '/sales',
       icon: icons.IconBusinessplan,
@@ -22,7 +22,7 @@ const sales = {
     },
     {
       id: 'customer',
-      title: 'Musteri',
+      title: 'Müşteri',
       type: 'item',
       url: '/customer',
       icon: iconDollar.IconUserDollar,

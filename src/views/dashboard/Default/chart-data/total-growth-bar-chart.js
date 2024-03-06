@@ -34,12 +34,12 @@ const chartData = {
     },
     xaxis: {
       type: 'category',
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      categories: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık']
     },
     legend: {
       show: true,
       fontSize: '14px',
-      fontFamily: `'Roboto', sans-serif`,
+      fontFamily: `'Poppins', sans-serif`,
       position: 'bottom',
       offsetX: 20,
       labels: {
@@ -66,21 +66,10 @@ const chartData = {
     }
   },
   series: [
+    
     {
-      name: 'Investment',
-      data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
-    },
-    {
-      name: 'Loss',
-      data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
-    },
-    {
-      name: 'Profit',
-      data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
-    },
-    {
-      name: 'Maintenance',
-      data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+      name: 'Kazanç',
+      data: [20, 54, 75, 34, 67, 115, 87, 89, 67, 200, 150, 170]
     }
   ]
 };

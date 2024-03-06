@@ -8,17 +8,42 @@ const icons = { IconReportAnalytics };
 
 const reports = {
  id: 'reports',
- 
+ title:'Raporlar',
  type: 'group',
  children: [
+  {
+    id: 'reports',
+    title: 'Günlük Rapor',
+    type: 'item',
+    url: '/reports',
+    icon: icons.IconReportAnalytics,
+    breadcrumbs: false
+  },
+  {
+    id: 'reports',
+    title: 'Aylık Rapor',
+    type: 'item',
+    url: '/reports',
+    icon: icons.IconReportAnalytics,
+    breadcrumbs: false
+  },
+  {
+    id: 'reports',
+    title: 'Yılllık Rapor',
+    type: 'item',
+    url: '/reports',
+    icon: icons.IconReportAnalytics,
+    breadcrumbs: false
+  },
    {
      id: 'reports',
-     title: 'Raporlar',
+     title: 'Ürün Hareketleri Raporu',
      type: 'item',
      url: '/reports',
      icon: icons.IconReportAnalytics,
      breadcrumbs: false
    },
+  
    ]
 };
 

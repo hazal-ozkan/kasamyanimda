@@ -8,40 +8,26 @@ const icons = { IconShoppingBagSearch };
 
 const products = {
  id: 'products',
- title:'Urunler',
+ title:'Ürünler',
  type: 'group',
  children: [
-   {
-     id: 'products',
-     title: 'Urunler',
-     type: 'item',
-     url: '/products',
-     icon: icons.IconShoppingBagSearch,
-     breadcrumbs: false
-   },{
-    id: 'productEntry',
-    title: 'Urun Girisi',
-    type: 'item',
-    url: '/productEntry',
-    icon: icons.IconShoppingBagSearch,
-    breadcrumbs: false
-  },{
+  {
     id: 'productOutput',
-    title: 'Urun cikisi',
+    title: 'Ürün Çıkışı',
     type: 'item',
     url: '/productOutput',
     icon: icons.IconShoppingBagSearch,
     breadcrumbs: false
   },{
     id: 'productRegistration',
-    title: 'Urun kayiti',
+    title: 'Ürün Kaydı',
     type: 'item',
     url: '/productRegistration',
     icon: icons.IconShoppingBagSearch,
     breadcrumbs: false
   },{
     id: 'productList',
-    title: 'Urun listesi',
+    title: 'Ürün Listesi',
     type: 'item',
     url: '/productList',
     icon: icons.IconShoppingBagSearch,

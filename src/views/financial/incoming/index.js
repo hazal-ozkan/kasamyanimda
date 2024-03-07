@@ -7,38 +7,48 @@ import Typography from '@mui/material/Typography';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
-import CustomerInsert from 'components/customer/incoming-insert';
+import CustomerInsert from 'components/incoming/incoming-insert';
+import Select from 'react-select';
 
 const Incoming = () => {
+  const gelirTuruOptions = [
+    { value: 'pos', label: 'POS' },
+    { value: 'nakit', label: 'Nakit' },
+    { value: 'diger', label: 'Diğer' },
+    // İhtiyaca göre seçenekleri ekleyebilirsiniz.
+  ];
   const [gelirToplam, setGelirToplam] = useState(0);
   const [nakit, setNakit] = useState(0);
   const [pos, setPos] = useState(0);
   const [baslangicTarihi, setBaslangicTarihi] = useState('');
   const [bitisTarihi, setBitisTarihi] = useState('');
-  const [gelirTuru, setGelirTuru] = useState('');
+  const [gelirTuru, setGelirTuru] = useState(null);
   const [gelirListesi, setGelirListesi] = useState([]);
-
   const [anchorEl, setAnchorEl] = useState(null);
 
- 
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
 
   const handleYeniGelirEkle = () => {
-    const yeniGelir = {
-      miktar: parseInt(nakit),
-      posMiktar: parseInt(pos),
-      tarih: new Date().toLocaleDateString(),
-      tur: gelirTuru,
-    };
+    if (gelirTuru) {
+      const yeniGelir = {
+        miktar: parseInt(nakit),
+        posMiktar: parseInt(pos),
+        tarih: new Date().toLocaleDateString(),
+        tur: gelirTuru.value, // Seçilen gelir türünün değerini kullanın
+      };
 
-    // Yeni geliri ekleyerek toplam geliri güncelle
-    setGelirListesi((prevList) => [...prevList, yeniGelir]);
-    setGelirToplam((prevToplam) => prevToplam + yeniGelir.miktar + yeniGelir.posMiktar);
+      // Yeni geliri ekleyerek toplam geliri güncelle
+      setGelirListesi((prevList) => [...prevList, yeniGelir]);
+      setGelirToplam((prevToplam) => prevToplam + yeniGelir.miktar + yeniGelir.posMiktar);
 
-    // Popover'ı kapat
-    handlePopoverClose();
+      // Popover'ı kapat
+      handlePopoverClose();
+    } else {
+      // Kullanıcı bir gelir türü seçmemişse uyarı verebilirsiniz.
+      console.warn('Lütfen bir gelir türü seçin.');
+    }
   };
 
   const handleListele = () => {
@@ -92,10 +102,11 @@ const Incoming = () => {
     {
       field: 'incomingDate',
       headerName: 'Gelir Tarihi',
-    },{
-        field: 'incomingHour',
-        headerName: 'Saat',
-      },
+    },
+    {
+      field: 'incomingHour',
+      headerName: 'Saat',
+    },
   ];
 
   const defaultColDef = useMemo(() => {
@@ -134,16 +145,20 @@ const Incoming = () => {
           style={{ marginRight: '10px' }}
         />
 
-        <TextField
-          label="Gelir Türü"
+        <Select
+          options={gelirTuruOptions}
           value={gelirTuru}
-          onChange={(e) => setGelirTuru(e.target.value)}
-          style={{ marginRight: '10px' }}
+          onChange={(selectedOption) => setGelirTuru(selectedOption)}
+          placeholder="Gelir Türü Seçin"
         />
-        <Button variant="contained" onClick={handleListele} style={{ marginLeft: '10px' }}>
-          Listele
-        </Button>
-        
+
+<Button
+  variant="contained"
+  onClick={handleListele}
+  style={{ marginLeft: '10px', marginBottom: '2px', padding: '2px 10px'  }}
+>
+  Listele
+</Button>
       </Box>
 
       <Popover

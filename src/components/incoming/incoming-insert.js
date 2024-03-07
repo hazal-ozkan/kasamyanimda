@@ -12,12 +12,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function CustomerInsert(props) {
     const [customer, setCustomer] = useState({
-        customerName: "",
-        phone: "",
-        email: "",
-        address: "",
-        tax: "",
-        taxNo: "",
+        row: "",
+        type: "",
+        incomingNote: "",
+        amount: "",
+        paymentType: "",
+        incomingDate: "",
+        incomingHour: "",
+
         tenant: "KasamYanimda"
 
     })
@@ -59,8 +61,8 @@ export default function CustomerInsert(props) {
                 <Col>
                     <div className='p-2'>
                         <TextField
-                            id="customerName"
-                            label="Müşteriiii"
+                            id="row"
+                            label="Sira"
                             variant="outlined"
                             onChange={handleInputChange}
                         />
@@ -69,8 +71,8 @@ export default function CustomerInsert(props) {
                 <Col>
                     <div className='p-2'>
                         <TextField
-                            id="phone"
-                            label="Telefon Numarası"
+                            id="type"
+                            label="Turu"
                             variant="outlined"
                             onChange={handleInputChange}
                         />
@@ -81,8 +83,8 @@ export default function CustomerInsert(props) {
                 <Col>
                     <div className='p-2'>
                         <TextField
-                            id="email"
-                            label="Email"
+                            id="incomingNote"
+                            label="Gelir Notu"
                             variant="outlined"
                             onChange={handleInputChange}
                         />
@@ -91,10 +93,10 @@ export default function CustomerInsert(props) {
                 <Col>
                     <div className='p-2'>
                         <TextField
-                            id="address"
+                            id="amount"
                             multiline
                             maxRows={4}
-                            label="Adres"
+                            label="Tutar"
                             variant="outlined"
                             onChange={handleInputChange}
                         />
@@ -105,8 +107,8 @@ export default function CustomerInsert(props) {
                 <Col>
                     <div className='p-2'>
                         <TextField
-                            id="tax"
-                            label="Vergi Dairesi"
+                            id="paymentType"
+                            label="Odeme turu"
                             variant="outlined"
                             onChange={handleInputChange}
                         />
@@ -115,8 +117,18 @@ export default function CustomerInsert(props) {
                 <Col>
                     <div className='p-2'>
                         <TextField
-                            id="taxNo"
-                            label="Vergi No"
+                            id="incomingDate"
+                            label="Gelir Tarihi"
+                            variant="outlined"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                </Col>
+                <Col>
+                    <div className='p-2'>
+                        <TextField
+                            id="incomingHour"
+                            label="Saati"
                             variant="outlined"
                             onChange={handleInputChange}
                         />

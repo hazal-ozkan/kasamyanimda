@@ -4,7 +4,6 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useMemo, useState } from 'react';
-//import { createRoot } from 'react-dom/client';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
@@ -13,17 +12,27 @@ import DialogContent from '@mui/material/DialogContent';
 //import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import axios from 'axios';
+import { useEffect } from 'react';
+import Select from 'react-select'
+import { Row,Col } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 
 const Users = () => {
   const [open, setOpen] = useState(false);
+  const [roleList,setRoleList] = useState([]);
+  const [refresh,setRefresh] =useState(null)
   const [newUserData, setNewUserData] = useState({
-    kullanciadi: '',
-    soyadi: '',
-    kullaniciAdi: '',
-    rol: '',
+    name: '',
+    surname: '',
+    username: '',
+    password: '',
+    role: '',
     email: '',
-    telNo: '',
-    departman: '',
+    phone: '',
+    company: '',
+    deparment: '',
   });
 
   const handleOpen = () => {
@@ -34,6 +43,23 @@ const Users = () => {
     setOpen(false);
   };
 
+  const userList = async () => {
+    
+    try{
+      const apiUrl = `https://localhost:44344/api/Auth/usersCase`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+        setRowData(response.data)
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   const handleInputChange = (field, value) => {
     setNewUserData((prevData) => ({
       ...prevData,
@@ -41,125 +67,241 @@ const Users = () => {
     }));
   };
 
-  const handleConfirm = () => {
-    console.log(newUserData);
-
-    // Yeni kullanıcı eklemek için burada gerekli işlemleri yapabilirsiniz
-    // Kullanıcı bilgilerine newUserData üzerinden erişebilirsiniz
-    // ...
-    // İşlem tamamlandıktan sonra modalı kapatın
-    handleClose();
+  const handleConfirm = async () => {
+    try {
+      const apiUrl = `https://localhost:44344/api/Auth/userCase/register`;
+       await axios.post(apiUrl,newUserData, {
+          withCredentials: true,
+          headers: {
+              Accept: '*/*',
+              'Content-Type': 'application/json'
+          }
+      })
+      
+      toast.success("Kullanıcı başarıyla kaydedildi")
+      setTimeout(()=> {
+          setRefresh(uuidv4())
+          handleClose();
+      },1000)
+  } catch (err) {
+      console.log(err)
+  }
+    
   };
 
-  
+
+  const getroleList = async () => {
+    
+    try{
+      const apiUrl = `https://localhost:44344/roles`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+        setRoleList(response.data.map(item => ({
+          label:item.roleName,
+          value:item.id
+        })))
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+useEffect(()=> {
+getroleList()
+userList()
+},[refresh])
 
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
-  const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
-  const [rowData] = useState([
-    { kullanciadi: 'Yunus', soyadi: 'kirbas',kullaniciAdi: 'y.kirbas', rol: 'CASHIER',  email: 'yunuskirbas26@hotmail.com',telNo: 6094531508,departman: 64950  },
-    { kullanciadi: 'Hazal', soyadi: 'Ozkan',kullaniciAdi: 'h.ozkan', rol: 'CASHIER',  email: 'yunuskirbas26@hotmail.com',telNo: 654654165, departman: 33850 },
-    { kullanciadi: 'Yildiray', soyadi: 'Erdem',kullaniciAdi: 'y.erdem', rol: 'CASHIER',  email: 'yunuskirbas26@hotmail.com',telNo: 6546546544, departman: 29600 },
-    
-  
-]);
-const [columnDefs] = useState([
-  {
-    field: 'kullanciadi',
-    headerName: 'Adi',
-    checkboxSelection: true,
-  },
-  { field: 'soyadi' , headerName: 'Soyadi'},
-  { field: 'kullaniciAdi' , headerName: 'Kullanici Adi'},
-  { field: 'rol' , headerName: 'Rolu'},
-  { field: 'email' , headerName: 'Email'},
-  { field: 'telNo' , headerName: 'Telefon Numarasi'},
-  { field: 'departman' , headerName: 'Departmani'},  
-]);
-const defaultColDef = useMemo(() => {
-  return {
-    filter: 'agTextColumnFilter',
-    floatingFilter: true,
-  };
-}, []);
-const rowClassRules = useMemo(() => {
-  return {
-    // apply red to Ford cars
-    'rag-red': (params) => params.data.kullanciadi === 'Ford',
-  };
-}, []);
-const paginationPageSizeSelector = useMemo(() => {
-  return [200, 500, 1000];
-}, []);
+  const gridStyle = useMemo(() => ({ height: '600px', width: '100%' }), []);
+  const [rowData, setRowData] = useState([])
+  const [columnDefs] = useState([
+    {
+      field: 'name',
+      headerName: 'Adı',
+      
+    },
+    { field: 'surname', headerName: 'Soyadi' },
+    { field: 'username', headerName: 'Kullanıcı Adı' },
+    { field: 'password', headerName: 'Şifre' },
+    { field: 'role', headerName: 'Rolu' },
+    { field: 'email', headerName: 'Mail Adresi' },
+    { field: 'phone', headerName: 'Telefon Numarası' },
+    { field: 'company', headerName: 'Şirket' },
+    { field: 'deparment', headerName: 'Departman' },
+  ]);
+  const defaultColDef = useMemo(() => {
+    return {
+      filter: 'agTextColumnFilter',
+      floatingFilter: true,
+    };
+  }, []);
+  const rowClassRules = useMemo(() => {
+    return {
+      // apply red to Ford cars
+      'rag-red': (params) => params.data.kullanciadi === 'Ford',
+    };
+  }, []);
+  const paginationPageSizeSelector = useMemo(() => {
+    return [200, 500, 1000];
+  }, []);
 
-return (
-  <div style={containerStyle}>
-     <div>
-      <Box display="flex" justifyContent="flex-end" marginBottom={2}>
-        <Button
-          disableElevation
-          size="small"
-          variant="contained"
-          color="secondary"
-          onClick={handleOpen}
-        >
-          Yeni kullanıcı ekle +
-        </Button>
-      </Box>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Yeni Kullanıcı Ekle</DialogTitle>
+  return (
+    <div style={containerStyle}>
+      <div>
+        <Box display="flex" justifyContent="flex-end" marginBottom={2}>
+          <Button
+            disableElevation
+            size="small"
+            variant="contained"
+            color="secondary"
+            onClick={handleOpen}
+          >
+            Yeni kullanıcı ekle +
+          </Button>
+        </Box>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle fontSize={20}>Yeni Kullanıcı Ekle</DialogTitle>
+         
+          <DialogContent>
+  <Row>
+    <Col>
+      <div className='p-2'>
         <TextField
-  label="Adı"
-  variant="outlined"
-  size="small"
-  style={{ width: '100px', marginRight: '10px' }}
-  value={newUserData.kullanciadi}
-  onChange={(e) => setNewUserData({ ...newUserData, kullanciadi: e.target.value })}
-/>
-        <DialogContent>
-          {columnDefs.map((column) => (
-            
-            <TextField
-              key={column.field}
-              margin="dense"
-              id={column.field}
-              label={column.headerName}
-              type="text"
-              style={{ width: '250px', marginRight: '20px' }}
+          id="name"
+          label="Adı"
+          variant="outlined"
+          onChange={(e) => handleInputChange('name', e.target.value)}
+        />
+      </div>
+    </Col>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="surname"
+          label="Soyadı"
+          variant="outlined"
+          onChange={(e) => handleInputChange('surname', e.target.value)}
+        />
+      </div>
+    </Col>
+  </Row>
+  <Row>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="username"
+          label="Kullanıcı Adı"
+          variant="outlined"
+          onChange={(e) => handleInputChange('username', e.target.value)}
+        />
+      </div>
+    </Col>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="password"
+          label="Şifre"
+          variant="outlined"
+          onChange={(e) => handleInputChange('password', e.target.value)}
+        />
+      </div>
+    </Col>
+  </Row>
+  <Row>
+    <Col>
+      <div className='p-2'>
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          placeholder="Rol"
+          isClearable
+          isSearchable
+          name="role"
+          options={roleList}
+          onChange={(selectedOption) => handleInputChange('role', selectedOption.label)}
+        />
+      </div>
+    </Col>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="email"
+          label="Mail Adresi"
+          variant="outlined"
+          onChange={(e) => handleInputChange('email', e.target.value)}
+        />
+      </div>
+    </Col>
+  </Row>
+  <Row>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="phone"
+          label="Telefon Numarası"
+          variant="outlined"
+          onChange={(e) => handleInputChange('phone', e.target.value)}
+        />
+      </div>
+    </Col>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="company"
+          label="Şirket"
+          variant="outlined"
+          onChange={(e) => handleInputChange('company', e.target.value)}
+        />
+      </div>
+    </Col>
+  </Row>
+  <Row>
+    <Col>
+      <div className='p-2'>
+        <TextField
+          id="department"
+          label="Departman"
+          variant="outlined"
+          onChange={(e) => handleInputChange('deparment', e.target.value)}
+        />
+      </div>
+    </Col>
+  </Row>
+</DialogContent>
 
-              onChange={(e) => handleInputChange(column.field, e.target.value)}
-            />
-          ))}
-        </DialogContent>
-        
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            İptal
-          </Button>
-          <Button onClick={handleConfirm} color="primary">
-            Onayla
-          </Button>
-        </DialogActions>
-      </Dialog>
+
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              İptal
+            </Button>
+            <Button onClick={handleConfirm} color="primary">
+              Kaydet
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div
+        style={gridStyle}
+        className={
+          "ag-theme-quartz"
+        }
+      >
+        <AgGridReact
+          rowData={rowData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          rowClassRules={rowClassRules}
+          rowSelection="multiple"
+          pagination={true}
+          paginationPageSize={500}
+          paginationPageSizeSelector={paginationPageSizeSelector}
+        />
+      </div>
     </div>
-    <div
-      style={gridStyle}
-      className={
-        "ag-theme-quartz"
-      }
-    >
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={columnDefs}
-        defaultColDef={defaultColDef}
-        rowClassRules={rowClassRules}
-        rowSelection="multiple"
-        pagination={true}
-        paginationPageSize={500}
-        paginationPageSizeSelector={paginationPageSizeSelector}
-      />
-    </div>
-  </div>
-);
+  );
 };
-
-export default Users;
+export default Users

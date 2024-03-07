@@ -17,6 +17,7 @@ import { useEffect } from 'react';
 const Customers = () => {
   const [show,setShow] = useState(false)
   const [rowData,setRowData]=useState([])
+  const [refresh,setRefresh] = useState(null)
 
   const customerList = async () => {
     
@@ -37,7 +38,7 @@ const Customers = () => {
 
   useEffect(()=>{
     customerList()
-  },[])
+  },[refresh])
   const columnDefs = [
     {
       field: 'customerName',
@@ -91,7 +92,7 @@ const Customers = () => {
         paginationPageSizeSelector={[200, 500, 1000]}
       />
     </div>
-    <CustomerInsert show={show} setShow={setShow}/>
+    <CustomerInsert show={show} setShow={setShow} setRefresh={setRefresh}/>
   </Grid>);
 }
 

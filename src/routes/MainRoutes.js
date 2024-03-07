@@ -23,6 +23,9 @@ import DailyReports from 'views/reports/dailyReports';
 import MontlyReports from 'views/reports/montlyReports';
 import YearlyReports from 'views/reports/yearlyReports';
 import ProductsMoveReports from 'views/reports/productsMoveReports';
+import Incoming from 'views/financial/incoming';
+import Outgoing from 'views/financial/outgoing';
+import Types from 'views/financial/types';
 
 
 
@@ -184,6 +187,15 @@ const MainRoutes = {
     },{
       path: 'productsMoveReports',
       element: <ProductsMoveReports />
+    },{
+      path: 'incoming',
+      element: <Incoming />
+    },{
+      path: 'outgoing',
+      element: <Outgoing />
+    },{
+      path: 'types',
+      element: <Types />
     },
   ]
 };

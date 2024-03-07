@@ -5,6 +5,7 @@ import departments from './departments';
 import bills from './bills';
 import products from './products';
 import reports from './reports';
+import financial from './financial';
 
 // ==============================|| MENU ITEMS ||============================== //
 
@@ -40,7 +41,7 @@ const MenuItems = () => {
     };
   } else if (user && user.role === "Muhasebeci") {
     menuItems = {
-      items: [bills]
+      items: [bills,financial]
     };
   } else if (user && user.role === "Satış Danışmanı") {
     menuItems = {
@@ -48,11 +49,11 @@ const MenuItems = () => {
     };
   } else if (user && user.role === "Patron") {
     menuItems = {
-      items: [dashboard, sales, departments, bills, products, reports]
+      items: [dashboard, sales, departments, bills, products, reports,financial]
     };
   } else if (user && user.role === "Müdür") {
     menuItems = {
-      items: [dashboard, sales, bills, products, reports]
+      items: [dashboard, sales, bills, products, reports,financial]
     };
   }
 

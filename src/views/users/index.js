@@ -4,7 +4,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
 import React, { useMemo, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+//import { createRoot } from 'react-dom/client';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
@@ -162,9 +162,4 @@ return (
 );
 };
 
-const root = createRoot(document.getElementById('root'));
-root.render(
-
-  <Users />
-
-);
+export default Users;

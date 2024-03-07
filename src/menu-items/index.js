@@ -5,6 +5,7 @@ import departments from './departments';
 import bills from './bills';
 import products from './products';
 import reports from './reports';
+import financial from './financial';
 
 
 
@@ -15,7 +16,7 @@ import reports from './reports';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard,sales,departments,bills,products,reports]
+  items: [dashboard,sales,departments,bills,products,reports,financial]
 };
 
 export default menuItems;

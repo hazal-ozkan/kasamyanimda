@@ -1,94 +1,59 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Popover from '@mui/material/Popover';
-import Box from '@mui/material/Box';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Typography from '@mui/material/Typography';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
-import CustomerInsert from 'components/outgoing/outgoing-insert';
-import Select from 'react-select';
+import {  Col, Row } from 'react-bootstrap';
+import moment from 'moment/moment';
+import { Card, CardContent } from '@mui/material';
+import OutGoingInsert from 'components/outgoing/outgoing-insert';
+import axios from 'axios';
 
 const Outgoing = () => {
-  const giderTuruOptions = [
-    { value: 'pos', label: 'POS' },
-    { value: 'nakit', label: 'Nakit' },
-    { value: 'diger', label: 'Diğer' },
-    // İhtiyaca göre seçenekleri ekleyebilirsiniz.
-  ];
-  const [giderToplam, setGiderToplam] = useState(0);
-  const [nakit, setNakit] = useState(0);
-  const [pos, setPos] = useState(0);
-  const [baslangicTarihi, setBaslangicTarihi] = useState('');
-  const [bitisTarihi, setBitisTarihi] = useState('');
-  const [giderTuru, setGiderTuru] = useState(null);
-  const [giderListesi, setGiderListesi] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [gelirToplam,setGelirToplam] = useState(0);
+  const [nakit,setNakitToplam] = useState(0);
+  const [pos,setPosToplam] = useState(0);
+  const [show, setShow] = useState(false);
+  const [rowData,setRowData] = useState([]);
+  const [refresh, setRefresh] = useState(null);
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
 
-  const handleYeniGiderEkle = () => {
-    if (giderTuru) {
-      const yeniGider = {
-        miktar: parseInt(nakit),
-        posMiktar: parseInt(pos),
-        tarih: new Date().toLocaleDateString(),
-        tur: giderTuru.value, // Seçilen gider türünün değerini kullanın
-      };
 
-      // Yeni gider ekleyerek toplam gider güncelle
-      setGiderListesi((prevList) => [...prevList, yeniGider]);
-      setGiderToplam((prevToplam) => prevToplam + yeniGider.miktar + yeniGider.posMiktar);
 
-      // Popover'ı kapat
-      handlePopoverClose();
-    } else {
-      // Kullanıcı bir gider türü seçmemişse uyarı verebilirsiniz.
-      console.warn('Lütfen bir gider türü seçin.');
+  const outGoingList = async () => {
+    try{
+      const apiUrl = `https://localhost:44344/api/Financial/outGoing/list`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+        setRowData(response.data)
+        setGelirToplam(response.data.reduce((total, item) => total + item.amount, 0))
+        setNakitToplam(response.data.filter((item) => item.paymentType === "Nakit").reduce((total, item) => total + item.amount, 0))
+        setPosToplam(response.data.filter((item) => item.paymentType === "Pos").reduce((total, item) => total + item.amount, 0))
+      }catch(err){
+      console.log(err)
     }
   };
 
-  const handleListele = () => {
-    // Filtrelenmiş gider listesini al
-    const filtrelenmisListe = giderListesi.filter(
-      (gider) =>
-      gider.tarih >= baslangicTarihi && gider.tarih <= bitisTarihi && (!gider || gider.tur === gider)
-    );
-
-    // Filtrelenmiş gider listesini konsola yazdır
-    console.log(filtrelenmisListe);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-  const [show, setShow] = useState(false);
-  const [rowData] = useState([]);
-  const [refresh, setRefresh] = useState(null);
-
-  const customerList = async () => {
-    // Müşteri listesini çekmek için axios veya başka bir servis kullanabilirsiniz.
-    // Örnek: const response = await axios.get(`https://localhost:44344/customer`);
-    // setRowData(response.data);
-  };
-
   useEffect(() => {
-    customerList();
+    outGoingList();
   }, [refresh]);
 
   const columnDefs = [
     {
-      field: 'row',
-      headerName: 'Sira',
-    },
-    {
       field: 'type',
-      headerName: 'Gider Turu',
+      headerName: 'Gider Türü',
     },
     {
-      field: 'incomingNote',
+      field: 'description',
       headerName: 'Gider Notu',
     },
     {
@@ -97,118 +62,74 @@ const Outgoing = () => {
     },
     {
       field: 'paymentType',
-      headerName: 'Odeme Tipi',
+      headerName: 'Ödeme Tipi',
     },
     {
-      field: 'incomingDate',
+      field: 'date',
       headerName: 'Gider Tarihi',
+      cellRenderer: (params) => {
+        return moment(params.data.date).format("DD-MM-YYYY")
+      },
+      filter: 'agDateColumnFilter'
     },
-    {
-      field: 'incomingHour',
-      headerName: 'Saat',
-    },
+
   ];
 
   const defaultColDef = useMemo(() => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex: 1,
     };
   }, []);
 
   return (
     <div>
-      <Typography variant="h4">
-      Gider Toplam: {giderToplam} Nakit: {nakit} Pos: {pos}
+     
+     <Row className='d-flex justify-content-between mb-3'>
+     <Col>
+     <Card>
+        <CardContent className='d-flex justify-content-between'>
+        <Typography variant="h4">
+      Giderler Toplam: {gelirToplam}    
+     
       </Typography>
-
-      <Box display="flex" marginTop={2}>
-        <TextField
-          label="Başlangıç Tarihi"
-          type="date"
-          value={baslangicTarihi}
-          onChange={(e) => setBaslangicTarihi(e.target.value)}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          style={{ marginRight: '10px' }}
-        />
-
-        <TextField
-          label="Bitiş Tarihi"
-          type="date"
-          value={bitisTarihi}
-          onChange={(e) => setBitisTarihi(e.target.value)}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          style={{ marginRight: '10px' }}
-        />
-
-        <Select
-          options={giderTuruOptions}
-          value={giderTuru}
-          onChange={(selectedOption) => setGiderTuru(selectedOption)}
-          placeholder="Gider Türü Seçin"
-        />
-
-<Button
-  variant="contained"
-  onClick={handleListele}
-  style={{ marginLeft: '10px', marginBottom: '2px', padding: '2px 10px'  }}
->
-  Listele
-</Button>
-      </Box>
-
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <Box p={2}>
-          {/* Popover içeriği */}
-          <Typography variant="h6">Yeni Gider Girişi</Typography>
-
-          <TextField
-            label="Miktar (₺)"
-            type="number"
-            value={nakit}
-            onChange={(e) => setNakit(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-
-          <TextField
-            label="Pos Miktarı (₺)"
-            type="number"
-            value={pos}
-            onChange={(e) => setPos(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-
-          <Button variant="contained" onClick={handleYeniGiderEkle}>
-            Ekle
-          </Button>
-        </Box>
-      </Popover>
-
+      <AccountBalanceWalletIcon color='primary'/>
+        </CardContent>
+      </Card></Col>
+      <Col>
+     <Card>
+        <CardContent  className='d-flex justify-content-between'>
+        <Typography variant="h4">
+          
+       Nakit: {nakit}   
+      </Typography>
+      <PaymentsIcon color='primary'/>
+        </CardContent>
+      </Card></Col>
+      <Col>
+     <Card>
+        <CardContent  className='d-flex justify-content-between'>
+        <Typography variant="h4">
+       Pos: {pos}
+      </Typography>
+      <CreditCardIcon color='primary'/>
+        </CardContent>
+      </Card></Col>
+      </Row>
+      
+    
+      
       {/* Burada müşteri listesini göstermek için kullanılan kısım */}
-      <Box display="flex" justifyContent="flex-end" marginBottom={2}>
+      <Row className='d-flex justify-content-between mb-3'>
+      
+     
+     
+<Col className=' d-flex justify-content-end'>
         <Button color="secondary" variant="contained" onClick={() => setShow(true)}>
           Yeni Gider Ekle
-        </Button>
-      </Box>
+        </Button></Col>
+        </Row>
 
       <div className="ag-theme-quartz" style={{ height: 500 }}>
         <AgGridReact
@@ -222,7 +143,7 @@ const Outgoing = () => {
           paginationPageSizeSelector={[200, 500, 1000]}
         />
       </div>
-      <CustomerInsert show={show} setShow={setShow} setRefresh={setRefresh} />
+      <OutGoingInsert show={show} setShow={setShow} setRefresh={setRefresh} />
     </div>
   );
 };

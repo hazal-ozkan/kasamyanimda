@@ -9,26 +9,25 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-
-export default function CustomerInsert(props) {
-    const [customer, setCustomer] = useState({
-        row: "",
+import Select from 'react-select'
+import { useEffect } from 'react';
+export default function OutGoingInsert(props) {
+    const [outGoing, setOutGoing] = useState({
         type: "",
-        incomingNote: "",
+        description: "",
         amount: "",
         paymentType: "",
-        incomingDate: "",
-        incomingHour: "",
-
+        date: "",
         tenant: "KasamYanimda"
 
     })
+    const [typeList,setTypeList] = useState([])
     const handleClose = () => props.setShow(false);
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/register`;
-             await axios.post(apiUrl,customer, {
+            const apiUrl = `https://localhost:44344/api/Financial/register/OutGoing`;
+             await axios.post(apiUrl,outGoing, {
                 withCredentials: true,
                 headers: {
                     Accept: '*/*',
@@ -36,7 +35,7 @@ export default function CustomerInsert(props) {
                 }
             })
             
-            toast.success("Müşteri başarıyla kaydedildi")
+            toast.success("Gider başarıyla kaydedildi")
             setTimeout(()=> {
                 props.setRefresh(uuidv4())
                 props.setShow(false)
@@ -45,97 +44,118 @@ export default function CustomerInsert(props) {
             console.log(err)
         }
     }
-    const handleInputChange = (e) => {
-        const { id, value } = e.target;
-        setCustomer((prevCustomer) => ({
-            ...prevCustomer,
-            [id]: value
-        }));
-    };
+    useEffect(()=>{
+        getTypeList()
+            },[])
+
+            const getTypeList = async () => {
+                try{ 
+                    
+                    const apiUrl = `https://localhost:44344/api/Financial/type/list`;
+                const response = await axios.get(apiUrl, {
+                  withCredentials: true,
+                    headers: {
+                     Accept:'*/*',
+                     'Content-Type': 'application/json'
+                    }
+                })
+                setTypeList(response.data
+                    .filter(item => item.type === "0") // type değeri "0" olanları filtrele
+                    .map(item => ({
+                      label: item.typeName,
+                      value: item.id
+                    }))
+                  );
+            
+                }catch(err){
+                    console.log(err)
+                }
+            }
+
+            const handleInputChange = (field,value) => {
+        
+                setOutGoing((prev) => ({
+                    ...prev,
+                    [field]: value
+                }));
+            };
     return (
 
         <Dialog open={props.show} onClose={handleClose}>
-        <DialogTitle fontSize={20}>Yeni Müşteri Ekle</DialogTitle>
+        <DialogTitle fontSize={20}>Yeni Gider Ekle</DialogTitle>
         <DialogContent>
-            <Row>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="row"
-                            label="Sira"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="type"
-                            label="Turu"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="incomingNote"
-                            label="Gider Notu"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="amount"
-                            multiline
-                            maxRows={4}
-                            label="Tutar"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="paymentType"
-                            label="Odeme turu"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="incomingDate"
-                            label="Gider Tarihi"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-                <Col>
-                    <div className='p-2'>
-                        <TextField
-                            id="incomingHour"
-                            label="Saati"
-                            variant="outlined"
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Col>
-            </Row>
-        </DialogContent>
+                <Row>
+                    <Col>
+                        <div className='p-2'>
+                            <Select
+                                className="basic-single"
+                                classNamePrefix="select"
+                                placeholder="Tür"
+                                isClearable
+                                isSearchable
+                                name="type"
+                                options={typeList}
+                                styles={{
+                                    menu: provided => ({
+                                        ...provided,
+                                        zIndex: 9999, // İstediğiniz z-index değerini burada belirleyebilirsiniz
+                                    }),
+                                }}
+                                onChange={(selectedOption) => handleInputChange('type', selectedOption.label)}
+                            />
+                        </div>
+                       
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <div className='p-2'>
+                            <TextField
+                                id="amount"
+                                label="Tutar"
+                                variant="outlined"
+                                onChange={(selectedOption) => handleInputChange('amount', selectedOption.target.value)}
+                            />
+                        </div>
+                    </Col>
+                    <Col>
+                        <div className='p-2'>
+                            <TextField
+                                id="paymentType"
+                                label="Ödeme Türü"
+                                variant="outlined"
+                                onChange={(selectedOption) => handleInputChange('paymentType', selectedOption.target.value)}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+                <Row>
+
+                    <Col>
+                        <div className='p-2'>
+                            <TextField
+                                label="Gider Tarihi"
+                                type="date"
+                                onChange={(selectedOption) => handleInputChange('date', selectedOption.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+
+                            />
+                        </div>
+                    </Col>
+                    <Col>
+                            <div className='p-2'>
+                                <TextField
+                                    id="description"
+                                    label="Gider Notu"
+                                    variant="outlined"
+                                    onChange={(selectedOption) => handleInputChange('description', selectedOption.target.value)}
+                                />
+                            </div>
+                        </Col>
+                </Row>
+            </DialogContent>
         <DialogActions>
             <Button onClick={handleClose} color="primary">
                 Kapat

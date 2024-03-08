@@ -1,3 +1,7 @@
 .modal-dialog{
     margin-top: 100px !important;
 }
+
+span.badge.bg-primary{
+    color: #fff !important;
+}

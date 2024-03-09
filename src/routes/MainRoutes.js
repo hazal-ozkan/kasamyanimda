@@ -26,6 +26,7 @@ import ProductsMoveReports from 'views/reports/productsMoveReports';
 import Incoming from 'views/financial/incoming';
 import Outgoing from 'views/financial/outgoing';
 import Types from 'views/financial/types';
+import VariantList from 'views/products/variantList';
 
 
 
@@ -196,6 +197,10 @@ const MainRoutes = {
     },{
       path: 'types',
       element: <Types />
+    },
+    {
+      path: 'variantList',
+      element: <VariantList />
     },
   ]
 };

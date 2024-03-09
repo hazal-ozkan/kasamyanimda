@@ -42,7 +42,10 @@ const ProductList = () => {
   const columnDefs = [
     {
       field: 'picture',
-      headerName:'Resim'
+      headerName:'Resim',
+     cellRenderer:(params) => {
+      return <img src={params.data.pictures} alt="Dosya Resmi"/>
+     }
     },
     {
       field: 'barcode',

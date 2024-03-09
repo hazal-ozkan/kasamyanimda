@@ -5,3 +5,21 @@
 span.badge.bg-primary{
     color: #fff !important;
 }
+
+span.p-button.p-fileupload-choose.p-component{
+    font-size: 10px !important;
+   
+    padding: 5px !important;
+}
+button.p-button.p-component{
+    font-size: 10px !important;
+   border-radius: 6px !important;
+    padding: 5px !important;
+}
+
+.custom-row.row{
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}

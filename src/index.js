@@ -13,6 +13,8 @@ import { store } from 'store';
 import 'assets/index.css';
 import 'assets/scss/style.scss';
 import config from './config';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 // ==============================|| REACT DOM RENDER  ||============================== //
 

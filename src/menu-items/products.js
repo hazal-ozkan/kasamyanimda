@@ -13,14 +13,14 @@ const products = {
  children: [
   {
     id: 'productOutput',
-    title: 'Ürün Çıkışı',
+    title: 'Stok Çıkışı',
     type: 'item',
     url: '/productOutput',
     icon: icons.IconShoppingBagSearch,
     breadcrumbs: false
   },{
     id: 'productRegistration',
-    title: 'Ürün Kaydı',
+    title: 'Stok Girişi',
     type: 'item',
     url: '/productRegistration',
     icon: icons.IconShoppingBagSearch,
@@ -30,6 +30,14 @@ const products = {
     title: 'Ürün Listesi',
     type: 'item',
     url: '/productList',
+    icon: icons.IconShoppingBagSearch,
+    breadcrumbs: false
+  },
+  {
+    id: 'variantList',
+    title: 'Varyasyon Listesi',
+    type: 'item',
+    url: '/variantList',
     icon: icons.IconShoppingBagSearch,
     breadcrumbs: false
   },

@@ -5,7 +5,8 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
-import CustomerInsert from 'components/customer/customer-insert';
+import DepartmentInsert from 'components/company/department-insert';
+
 import React, {  useMemo,useState} from 'react';
 import { useEffect } from 'react';
 
@@ -14,10 +15,10 @@ const Departments = () => {
   const [rowData,setRowData]=useState([])
   const [refresh,setRefresh] = useState(null)
 
-  const customerList = async () => {
+  const departmentList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/customer`;
+      const apiUrl = `https://localhost:44344/departments`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -32,32 +33,24 @@ const Departments = () => {
   }
 
   useEffect(()=>{
-    customerList()
+    departmentList()
   },[refresh])
   const columnDefs = [
     {
-      field: 'customerName',
-      headerName:'Müşteri'
+      field: 'departmenName',
+      headerName:'Departman Adı'
     },
     {
-      field: 'email',
-      headerName:'Mail Adresi'
+      field: 'bossName',
+      headerName:'Müdür Adı'
     },
     {
-      field: 'phone',
-      headerName:'Telefon Numarası'
+      field: 'bossPhone',
+      headerName:'Müdür Telefon Numarası'
     },
     {
-      field: 'address',
-      headerName:'Adresi'
-    },
-    {
-      field: 'tax',
-      headerName:'Vergi Dairesi'
-    },
-    {
-      field: 'taxNo',
-      headerName:'Vergi Numarası'
+      field: 'bossMail',
+      headerName:'Müdür Mail Adresi'
     },
     
   ];
@@ -66,13 +59,14 @@ const Departments = () => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex:1
     };
   }, []);
 
   return (
    <Grid>
     <Box display="flex" justifyContent="flex-end" marginBottom={2}>
-      <Button color="secondary" variant="contained" onClick={()=>setShow(true)}>Yeni Müşteri Ekle </Button>
+      <Button color="secondary" variant="contained" onClick={()=>setShow(true)}>Yeni Departman Ekle </Button>
     </Box>
      
     <div className="ag-theme-quartz" style={{ height: 500 }}>
@@ -87,7 +81,7 @@ const Departments = () => {
         paginationPageSizeSelector={[200, 500, 1000]}
       />
     </div>
-    <CustomerInsert show={show} setShow={setShow} setRefresh={setRefresh}/>
+    <DepartmentInsert show={show} setShow={setShow} setRefresh={setRefresh}/>
   </Grid>); 
 }
 

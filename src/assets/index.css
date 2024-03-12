@@ -23,6 +23,14 @@ button.p-button.p-component{
     margin-left: 5px !important;
     margin-right: 5px !important;
 }
+
+.custom-row-report.row{
+    background-color: #5e35b1 !important;
+    color:#fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
 .d-flex.justify-content-between.custom-col.col{
 
     background-color: #fff !important;

@@ -20,7 +20,7 @@ export default function PersonalPieChart() {
       // Her çalışanın toplam satış miktarını hesapla
       const employeeTotals = response.data.reduce((acc, sale) => {
         sale.items.forEach((item) => {
-          const employeeName = item.employeeName;
+          const employeeName = sale.employeeName;
           const quantity = item.quantity;
 
           if (!acc[employeeName]) {

@@ -10,130 +10,9 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-const cardContents = [
-  {
-    title: 'Kart 1 Başlık',
-    amount: '100.00',
-    details: {
-      line1: 'Nakit satış: 114.00 TL',
-      line2: 'Parçalı nakit satış: 0.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 0.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 2 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 3 Başlık',
-    amount: '400.00',
-    details: {
-      line1: 'Nakit satış: 1500.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 4 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 5 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 6 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 7 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 8 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 9 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 10 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 11 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  {
-    title: 'Kart 12 Başlık',
-    amount: '200.00',
-    details: {
-      line1: 'Nakit satış: 150.00 TL',
-      line2: 'Kredi kartı satış: 50.00 TL',
-      line3: 'Kasa açılış: 0.00 TL (Toplama dahil değildir)',
-      line4: 'Nakit iade: 20.00 TL (Toplama dahil değildir)',
-    },
-  },
-  // Diğer kartlar
-];
+import { Button } from '@mui/material';
+import { Col, Row } from 'react-bootstrap';
+import axios from 'axios';
 
 const CustomCard = ({ title, amount, details }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -149,10 +28,10 @@ const CustomCard = ({ title, amount, details }) => {
           {title}
         </Typography>
         <Typography variant="h5" component="div">
-          {amount} TL
+          {amount} 
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{marginTop:'-40px'}}>
         <Accordion expanded={isExpanded} onChange={handleDetailClick}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
             <Typography>{isExpanded ? 'Kapat' : 'Detay'}</Typography>
@@ -163,8 +42,6 @@ const CustomCard = ({ title, amount, details }) => {
                 <div>
                   <p>{details.line1}</p>
                   <p>{details.line2}</p>
-                  <p>{details.line3}</p>
-                  <p>{details.line4}</p>
                 </div>
               )}
             </Typography>
@@ -177,59 +54,143 @@ const CustomCard = ({ title, amount, details }) => {
 
 const DailyReports = () => {
   const [refresh] = useState(null);
-  const [rowData] = useState([]);
+  const [rowData, setRowData] = useState([]);
+  const [inComingData, setInComingData] = useState([]);
+  const [outGoingData, setOutGoingData] = useState([]);
+ 
+  const [cashIn, setCashIn] = useState(0);
+  const [posIn, setPosIn] = useState(0);
+  const [cashOut, setCashOut] = useState(0);
+  const [posOut, setPosOut] = useState(0);
 
-  const customerList = async () => {
-    // Müşteri listesini çekmek için axios veya başka bir servis kullanabilirsiniz.
-    // Örnek: const response = await axios.get(`https://localhost:44344/customer`);
-    // setRowData(response.data);
+  const calculateTotalAmounts = (data) => {
+    const amounts = data.map(entry => entry.amount);
+    const cash = data.filter(item => item.paymentType === "Nakit").reduce((acc, item) => acc + item.amount, 0);
+    const pos = data.filter(item => item.paymentType === "Pos").reduce((acc, item) => acc + item.amount, 0);
+    
+    return { totalAmount: amounts.reduce((acc, amount) => acc + amount, 0), cash, pos };
+  };
+
+  const fetchData = async () => {
+    try {
+      const salesApiUrl = `https://localhost:44344/api/Product/sales/list`;
+      const inComingApiUrl = `https://localhost:44344/api/Financial/inComing/list`;
+      const outGoingApiUrl = `https://localhost:44344/api/Financial/outGoing/list`;
+
+      const [salesResponse, inComingResponse, outGoingResponse] = await Promise.all([
+        axios.get(salesApiUrl, { withCredentials: true, headers: { Accept: '*/*', 'Content-Type': 'application/json' } }),
+        axios.get(inComingApiUrl, { withCredentials: true, headers: { Accept: '*/*', 'Content-Type': 'application/json' } }),
+        axios.get(outGoingApiUrl, { withCredentials: true, headers: { Accept: '*/*', 'Content-Type': 'application/json' } })
+      ]);
+
+      const currentDate = new Date();
+      
+      // Sadece bugünün tarihine eşit olanları filtrele
+      const filteredSalesData = salesResponse.data.filter(item => {
+        const itemDate = new Date(item.saleDate);
+        return (
+          itemDate.getDate() === currentDate.getDate() &&
+          itemDate.getMonth() === currentDate.getMonth() &&
+          itemDate.getFullYear() === currentDate.getFullYear()
+        );
+      });
+
+      const filteredInComingData = inComingResponse.data.filter(item => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.getDate() === currentDate.getDate() &&
+          itemDate.getMonth() === currentDate.getMonth() &&
+          itemDate.getFullYear() === currentDate.getFullYear()
+        );
+      });
+
+      const filteredOutGoingData = outGoingResponse.data.filter(item => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.getDate() === currentDate.getDate() &&
+          itemDate.getMonth() === currentDate.getMonth() &&
+          itemDate.getFullYear() === currentDate.getFullYear()
+        );
+      });
+
+      setRowData(filteredSalesData);
+
+      const inComingTotals = calculateTotalAmounts(filteredInComingData);
+      setCashIn(inComingTotals.cash);
+      setPosIn(inComingTotals.pos);
+      setInComingData({
+        title: 'Gelirler',
+        amount: inComingTotals.totalAmount,
+        details: {
+          line1: `Nakit Gelir: ${inComingTotals.cash} TL`,
+          line2: `Pos Gelir: ${inComingTotals.pos} TL`,
+        }
+      });
+
+      const outGoingTotals = calculateTotalAmounts(filteredOutGoingData);
+      setCashOut(outGoingTotals.cash);
+      setPosOut(outGoingTotals.pos);
+      setOutGoingData({
+        title: 'Giderler',
+        amount: outGoingTotals.totalAmount,
+        details: {
+          line1: `Nakit Gider: ${outGoingTotals.cash} TL`,
+          line2: `Pos Gider: ${outGoingTotals.pos} TL`,
+        }
+      });
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
-    customerList();
+    fetchData();
   }, [refresh]);
 
   const columnDefs = [
     {
-      field: 'branch',
-      headerName: 'Sube',
+      field: 'tenant',
+      headerName: 'Departman',
       width: 120,
     },
     {
-      field: 'satusCode',
-      headerName: 'Satus Kodu',
+      field: 'id',
+      headerName: 'Satış Kodu',
     },
     {
       field: 'totalProduct',
-      headerName: 'toplam urun',
+      headerName: 'Toplam Ürün',
+      cellRenderer: params => {
+        // params.data.items dizisindeki her objenin quantity'sini topla
+        const totalQuantity = params.data.items.reduce((acc, item) => acc + item.quantity, 0);
+
+        // Toplam değeri döndür
+        return <span>{totalQuantity}</span>;
+      },
     },
     {
-      field: 'totalAmount',
+      field: 'totalPrice',
       headerName: 'Toplam Tutar',
     },
     {
-      field: 'Discount',
-      headerName: 'Iskonto',
+      field: 'discount',
+      headerName: 'İskonto',
     },
     {
       field: 'paymentType',
-      headerName: 'Odeme Tipi',
+      headerName: 'Ödeme Tipi',
+      cellRenderer: params => {
+        if (params.data.cash > 0) {
+          return 'Nakit';
+        } else if (params.data.pos > 0) {
+          return 'Pos';
+        }
+      },
     },
     {
-      field: 'date',
-      headerName: 'Tarih',
-    },
-    {
-      field: 'personel',
+      field: 'employeeName',
       headerName: 'Personel',
-    },
-    {
-      field: 'app',
-      headerName: 'Uygulama',
-    },
-    {
-      field: 'salesNote',
-      headerName: 'Satis Notu',
     },
   ];
 
@@ -240,21 +201,56 @@ const DailyReports = () => {
     };
   }, []);
 
+  const cardContents = [
+    {
+      title: 'Nakit',
+      amount: (cashIn - cashOut) + " TL",
+      details: {
+        line1: `Nakit Gelir: ${cashIn} TL`,
+        line2: `Nakit Gider: ${cashOut} TL`,
+      },
+    },
+    {
+      title: 'Pos',
+      amount: (posIn - posOut) + " TL",
+      details: {
+        line1: `Pos Gelir: ${posIn} TL`,
+        line2: `Pos Gider: ${posOut} TL`,
+      },
+    },
+    inComingData,
+    outGoingData,
+    {
+      title: 'Ciro',
+      amount: (inComingData.amount - outGoingData.amount) + " TL",
+      details: {
+        line1: `Gelirler: ${inComingData.amount} TL`,
+        line2: `Giderler: ${outGoingData.amount} TL`,
+      },
+    },
+    {
+      title: 'Kasa Açılış/Kapanış',
+      amount: '',
+      details: {
+        line1: `Kasa Açılış: 0 TL`,
+        line2: `Kasa Kapanış: 0 TL`,
+      },
+    },
+  ];
+
   return (
     <div>
-      <header style={{ backgroundColor: '#6610f2', color: '#fff', padding: '10px', textAlign: 'right', borderRadius: '10px' }}>
-        <h4 style={{ float: 'left', marginRight: '20px' }}>Günlük Rapor</h4>
-        <button
-          style={{ backgroundColor: '#2ecc71', color: '#fff', padding: '10px', border: 'none', borderRadius: '5px', margin: '10px', cursor: 'pointer' }}
-        >
-          Yazdır
-        </button>
-        <button
-          style={{ backgroundColor: '#2ecc71', color: '#fff', padding: '10px', border: 'none', borderRadius: '5px', margin: '10px', cursor: 'pointer' }}
-        >
-          Karı Göster
-        </button>
-      </header>
+      <Row className="custom-row-report p-3">
+        <Col>
+          <h5>Günlük Rapor</h5>
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <Button color="warning" sx={{ color: '#fff' }} variant="contained">
+            {' '}
+            Yazdır{' '}
+          </Button>
+        </Col>
+      </Row>
 
       <div className="ag-theme-quartz" style={{ height: '200px', marginTop: '25px' }}>
         {/* Ag-Grid tablo component'ı */}
@@ -267,7 +263,7 @@ const DailyReports = () => {
           pagination={true}
           paginationPageSize={500}
           paginationPageSizeSelector={[200, 500, 1000]}
-          domLayout='autoHeight'
+          domLayout="autoHeight"
           suppressHorizontalScroll={true}
           suppressVerticalScroll={true}
         />

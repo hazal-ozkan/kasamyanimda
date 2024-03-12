@@ -2,95 +2,115 @@ import React, { useState, useEffect, useMemo } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
+import { Col, Row } from 'react-bootstrap';
+import { Button } from '@mui/material';
+import axios from 'axios';
+import moment from 'moment';
 
 const ProductsMoveReports = () => {
   const [refresh] = useState(null);
-  const [rowData] = useState([]);
+  const [rowData, setRowData] = useState([]);
+  const [stockExit, setStockExit] = useState([]);
+  const [stockEntry, setStockEntry] = useState([]);
 
-  const customerList = async () => {
-    // Müşteri listesini çekmek için axios veya başka bir servis kullanabilirsiniz.
-    // Örnek: const response = await axios.get(`https://localhost:44344/customer`);
-    // setRowData(response.data);
+  const stockExistList = async () => {
+    try {
+      const apiUrl = `https://localhost:44344/api/Product/stockExist/list`;
+      const response = await axios.get(apiUrl, {
+        withCredentials: true,
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/json'
+        }
+      });
+      setStockExit(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const stockEntryList = async () => {
+    try {
+      const apiUrl = `https://localhost:44344/api/Product/stockEntry/list`;
+      const response = await axios.get(apiUrl, {
+        withCredentials: true,
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/json'
+        }
+      });
+      setStockEntry(response.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
-    customerList();
+    stockExistList();
+    stockEntryList();
   }, [refresh]);
+
+  useEffect(() => {
+    // stockEntry ve stockExit listelerini birleştirerek rowData oluştur
+    const mergedData = [...stockEntry, ...stockExit].map(item => {
+      return {
+        ...item,
+        movementType: Object.prototype.hasOwnProperty.call(item, 'exitReason') ? 'Çıkış' : 'Giriş'
+      };
+    });
+    setRowData(mergedData);
+  }, [stockEntry, stockExit]);
 
   const columnDefs = [
     {
-      field: 'row',
-      headerName: 'Sira',
-      width: 120,
+      field: 'productName',
+      headerName: 'Ürün Adı'
     },
     {
-      field: 'type',
-      headerName: 'Tur',
+      field: 'barcode',
+      headerName: 'Barkod'
     },
     {
-      field: 'product',
-      headerName: 'Urun',
+      field: 'quantity',
+      headerName: 'Miktar'
     },
     {
-      field: 'processNumber',
-      headerName: 'Islem Numarasi',
+      field: 'movementType',
+      headerName: 'Hareket Türü'
     },
     {
-      field: 'note',
-      headerName: 'Note',
-    },
-    {
-      field: 'Date',
+      field: 'date',
       headerName: 'Tarih',
-    },
-    {
-      field: 'customer',
-      headerName: 'Musteri',
-    },
-    {
-      field: 'paymentType',
-      headerName: 'Odeme Tipi',
-    },
-    {
-      field: 'amount',
-      headerName: 'Miktar',
-    },
-    {
-      field: 'remainder',
-      headerName: 'Kalan',
-    },{
-      field: 'unitPrice',
-      headerName: 'Birim Fiyati',
-    },{
-      field: 'sum',
-      headerName: 'Tutar',
-    },
+      cellRenderer: (params) => {
+        return moment(params.data.date).format('DD-MM-YYYY');
+      },
+      filter: 'agDateColumnFilter'
+    }
   ];
 
   const defaultColDef = useMemo(() => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex: 1
     };
   }, []);
 
   return (
     <div>
-      <header style={{ backgroundColor: '#6610f2', color: '#fff', padding: '10px', textAlign: 'right', borderRadius: '10px' }}>
-        <h4 style={{ float: 'left', marginRight: '20px' }}>Urun Hareket Raporu</h4>
-        <button
-          style={{ backgroundColor: '#2ecc71', color: '#fff', padding: '10px', border: 'none', borderRadius: '5px', margin: '10px', cursor: 'pointer' }}
-        >
-          Yazdır
-        </button>
-        <button
-          style={{ backgroundColor: '#2ecc71', color: '#fff', padding: '10px', border: 'none', borderRadius: '5px', margin: '10px', cursor: 'pointer' }}
-        >
-          Karı Göster
-        </button>
-      </header>
+      <Row className="custom-row-report p-3">
+        <Col>
+          <h5>Ürün Hareketleri Raporu</h5>
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <Button color="warning" sx={{ color: '#fff' }} variant="contained">
+            {' '}
+            Yazdır{' '}
+          </Button>
+        </Col>
+      </Row>
 
-      <div className="ag-theme-quartz" style={{ height: '250px', marginTop: '25px' }}>
+      <div className="ag-theme-quartz" style={{ height: '400px', marginTop: '25px' }}>
         {/* Ag-Grid tablo component'ı */}
         <AgGridReact
           rowData={rowData}
@@ -99,9 +119,9 @@ const ProductsMoveReports = () => {
           rowSelection="multiple"
           suppressRowClickSelection={true}
           pagination={true}
-          paginationPageSize={500}
-          paginationPageSizeSelector={[200, 500, 1000]}
-          domLayout='autoHeight'
+          paginationPageSize={50}
+          paginationPageSizeSelector={50}
+          domLayout="autoHeight"
           suppressHorizontalScroll={true}
           suppressVerticalScroll={true}
         />

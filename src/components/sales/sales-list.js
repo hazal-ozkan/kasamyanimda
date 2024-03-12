@@ -77,7 +77,7 @@ const SalesList = (props) => {
       field: 'salesDate',
       headerName:'Satış Tarihi',
       cellRenderer: (params) => {
-        return moment(params.data.date).format("DD-MM-YYYY")
+        return moment(params.data.saleDate).format("DD-MM-YYYY")
       },
       filter: 'agDateColumnFilter'
     },

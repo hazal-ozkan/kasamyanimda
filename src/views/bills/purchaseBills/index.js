@@ -2,66 +2,74 @@ import React, { useState, useEffect, useMemo } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { AgGridReact } from 'ag-grid-react';
+import { Col, Row } from 'react-bootstrap';
+import { Button } from '@mui/material';
+import BillInsert from 'components/financial/bill-insert';
+import axios from 'axios';
 
 const PurchaseBills = () => {
-  const [refresh] = useState(null);
-  const [rowData] = useState([]);
+  const [refresh,setRefresh] = useState(null);
+  const [rowData,setRowData] = useState([]);
+  const [show,setShow] = useState(false)
 
-  const customerList = async () => {
-    // Müşteri listesini çekmek için axios veya başka bir servis kullanabilirsiniz.
-    // Örnek: const response = await axios.get(`https://localhost:44344/customer`);
-    // setRowData(response.data);
+  const billList = async () => {
+    try{
+      const apiUrl = `https://localhost:44344/api/Financial/bill/list`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+        setRowData(response.data)
+    }catch(err){
+      console.log(err)
+    }
   };
 
   useEffect(() => {
-    customerList();
+    billList();
   }, [refresh]);
 
   const columnDefs = [
+   
     {
-      field: 'row',
-      headerName: 'Sira',
-      width: 120,
+      field: 'invoiceNumber',
+      headerName: 'Fatura Numarası',
     },
     {
-      field: 'billType',
-      headerName: 'Fatura Turu',
+      field: 'invoiceType',
+      headerName: 'Fatura Türü',
     },
-    {
-      field: 'billNumber',
-      headerName: 'Fatura Numarasi',
-    },
+    
     {
       field: 'company',
       headerName: 'Firma',
     },
     {
-      field: 'waybillNumber',
-      headerName: 'Irsaliye Numarasi',
-    },
-    {
-      field: 'documentNumber',
-      headerName: 'Belge Numarasi',
-    },
-    {
-      field: 'forwardDate',
-      headerName: 'Sevk Tarihi',
+      field: 'date',
+      headerName: 'Oluşturulma Tarihi',
     },
     {
       field: 'paymentType',
-      headerName: 'Odeme Tipi',
+      headerName: 'Ödeme Tipi',
     },
     {
-      field: 'sumProduct',
-      headerName: 'Toplam Urun',
+      headerName: 'Toplam Ürün',
+      cellRenderer: (params) => {
+        const totalQuantity = params.data?.products.reduce((acc, product) => acc + product.quantity, 0);
+        return totalQuantity;
+      }
     },
+    
     {
-      field: 'sumAmount',
       headerName: 'Toplam Tutar',
-    },{
-      field: 'detail',
-      headerName: 'Detay',
-    },
+      cellRenderer: (params) => {
+        const totalPrice = params.data?.products.reduce((acc, product) => acc + product.totalPrice, 0);
+        return totalPrice;
+      }
+    }
   ];
 
   const defaultColDef = useMemo(() => {
@@ -73,17 +81,13 @@ const PurchaseBills = () => {
   
 
   return (
-    
-    <div >
-      <header style={{ backgroundColor: '#6610f2', color: '#fff', padding: '10px', textAlign: 'right', borderRadius: '10px' }}>
-        <h4 style={{ float: 'left', marginRight: '20px' }}>Faturalar</h4>
-        
-        <button
-          style={{ backgroundColor: '#2ecc71', color: '#fff', padding: '10px', border: 'none', borderRadius: '5px', margin: '10px', cursor: 'pointer' }}
-        >
-          Yeni Fatura Oluştur
-        </button>
-      </header>
+    <>
+    <div hidden={show}>
+      <Row>
+        <Col className='d-flex justify-content-end'>
+            <Button color="secondary" variant="contained" onClick={()=>  setShow(true)}>Yeni Fatura Oluştur</Button>
+        </Col>
+      </Row>
       <div className="ag-theme-quartz" style={{ height: '250px', marginTop: '25px' }}>
         {/* Ag-Grid tablo component'ı */}
         <AgGridReact
@@ -93,15 +97,16 @@ const PurchaseBills = () => {
           rowSelection="multiple"
           suppressRowClickSelection={true}
           pagination={true}
-          paginationPageSize={500}
-          paginationPageSizeSelector={[200, 500, 1000]}
+          paginationPageSize={50}
+          paginationPageSizeSelector={50}
           domLayout='autoHeight'
           suppressHorizontalScroll={true}
           suppressVerticalScroll={true}
         />
       </div>
     </div>
-    
+    <BillInsert show={show} setShow={setShow} setRefresh={setRefresh}/>
+    </>
   );
 };
 

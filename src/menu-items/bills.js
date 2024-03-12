@@ -11,22 +11,7 @@ const bills = {
  title: 'Faturalar',
  type: 'group',
  children: [
-   {
-     id: 'incomingBills',
-     title: 'Gelen Faturalar',
-     type: 'item',
-     url: '/incomingBills',
-     icon: icons.IconReceipt,
-     breadcrumbs: false
-   },
-   {
-    id: 'outcomingBills',
-    title: 'Giden Faturalar',
-    type: 'item', 
-    url: '/outcomingBills',
-    icon: icons.IconReceipt,
-    breadcrumbs: false
-  },
+
   {
     id: 'PurchaseBills',
     title: 'Alış Faturaları',
@@ -37,20 +22,13 @@ const bills = {
   },
   {
     id: 'ebills',
-    title: 'E-Fatura Oluştur',
+    title: 'E-Faturalar ',
     type: 'item',
     url: '/ebills',
     icon: icons.IconReceipt,
     breadcrumbs: false
   },
-  {
-    id: 'createPurchaseBills',
-    title: 'Alış Faturası Oluştur',
-    type: 'item',
-    url: '/createPurchaseBills',
-    icon: icons.IconReceipt,
-    breadcrumbs: false
-  },
+ 
    ]
 };
 

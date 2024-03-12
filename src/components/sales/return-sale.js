@@ -13,13 +13,11 @@ import { v4 as uuidv4 } from 'uuid';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import PercentIcon from '@mui/icons-material/Percent';
 import { toast } from 'react-toastify';
-import CustomerInsert from 'components/customer/customer-insert';
+
 import SectionalSale from 'components/sales/sectional-sale';
 import SalesList from 'components/sales/sales-list';
-import ReturnSale from 'components/sales/return-sale';
-const Sales = () => {
+const ReturnSale = (props) => {
   const [sound, setSound] = useState(null);
   const [inputChange, setInputChange] = useState(false)
   const [customerList, setCustomerList] = useState([])
@@ -29,15 +27,13 @@ const Sales = () => {
   const [totalPrice, setTotalPrice] = useState(0)
   const [changePrice, setChangePrice] = useState(0)
   const [barcode, setBarcode] = useState('');
-  const [iskonto, setIskonto] = useState(0);
   const [employeeId, setEmployeeId] = useState('')
   const [employeeName, setEmployeeName] = useState('')
   const [viewProduct, setViewProduct] = useState([])
-const [show,setShow] = useState(false)
 const [refresh,setRefresh] = useState(null)
 const [sectionalShow,setSectionalShow] = useState(false)
 const [salesListShow,setSalesListShow] = useState(false)
-const [returnShow,setReturnShow] = useState(false)
+
 
   useEffect(() => {
     setSound(new Howl({
@@ -70,11 +66,11 @@ const [returnShow,setReturnShow] = useState(false)
         employeeName:employeeName,
         employeeId: employeeId,
         totalPrice: totalPrice,
-        saleDate: new Date().toISOString().split('T')[0],
+        returnDate: new Date().toISOString().split('T')[0],
         cash:0,
         pos:0,
         items: productList,
-        discount: iskonto,
+        
         tenant:'KasamYanimda'
       } 
 
@@ -88,7 +84,7 @@ const [returnShow,setReturnShow] = useState(false)
       }
      
 
-      const apiUrl = `https://localhost:44344/api/Product/saleProduct`;
+      const apiUrl = `https://localhost:44344/api/Product/returnSale`;
       await axios.post(apiUrl, updatedSaleData, {
         withCredentials: true,
         headers: {
@@ -97,7 +93,7 @@ const [returnShow,setReturnShow] = useState(false)
         }
       });
 
-      toast.success("Satış başarıyla kaydedildi");
+      toast.success("İade başarıyla kaydedildi");
       setTimeout(() => {
         resetValues();
         setRefresh(uuidv4())
@@ -113,9 +109,9 @@ const [returnShow,setReturnShow] = useState(false)
     setPayment(0)
     setTotalPrice(0)
     setChangePrice(0)
-    setCustomer({label:null,value:null})
+    setCustomer('')
     setEmployeeId('')
-    setIskonto(0)
+   
     setBarcode('')
 
   }
@@ -292,29 +288,22 @@ const [returnShow,setReturnShow] = useState(false)
 
   return (
     <>
-    <div hidden={salesListShow || returnShow}>
+    <div hidden={!props.returnShow || salesListShow}>
       <Row className=' mb-1'>
-        <Col className='d-flex justify-content-center'>
+        <Col className='d-flex justify-content-center mt-2'>
           <p><Chip sx={{ marginTop: "10px" }} color='primary' label="Tutar" /></p> <TextField id="total" type="number" value={totalPrice} variant="outlined" disabled />
         </Col>
-        <Col className='d-flex justify-content-center'>
+        <Col className='d-flex justify-content-center mt-2'>
           <p><Chip sx={{ marginTop: "10px" }} color='primary' label="Ödeme" /></p> <TextField id="payment" type="number" value={payment} variant="outlined" onChange={(e) => setPayment(e.target.value)} />
         </Col>
-        <Col className='d-flex justify-content-center'>
+        <Col className='d-flex justify-content-center mt-2'>
           <p><Chip sx={{ marginTop: "10px" }} color='primary' label="Para Üstü" /></p> <TextField id="change" type="number" value={changePrice} variant="outlined" disabled />
         </Col>
-        <Col className='d-flex justify-content-center'>
-          <p><Chip sx={{ marginTop: "10px" }} color='primary' label="İskonto" /></p> <TextField id="change" type="number" value={iskonto} variant="outlined" onChange={(e) => { setIskonto(e.target.value); setTotalPrice(totalPrice - ((totalPrice * e.target.value) / 100)) }} />
-
-
-          <PercentIcon sx={{ my: 1, fontSize: '30px' }} color='primary' />
-
-
-        </Col>
+       
         <Col className='mt-1'>
-          <Button color="success" sx={{ color: '#fff' }} variant="contained" onClick={() => { handleSave('Nakit') }}> Nakit </Button>
-          <Button color="success" sx={{ color: '#fff' }} variant="contained" onClick={() => { handleSave('Pos') }}> Pos </Button>
-          <Button color="success" sx={{ color: '#fff' }} variant="contained" onClick={() => { setSectionalShow(true)}}> Parçalı</Button>
+          <Button color="error" sx={{ color: '#fff' }} variant="contained" onClick={() => { handleSave('Nakit') }}> Nakit <br/> İade </Button>
+          <Button color="error" sx={{ color: '#fff' }} variant="contained" onClick={() => { handleSave('Pos') }}> Pos <br/> İade </Button>
+          <Button color="error" sx={{ color: '#fff' }} variant="contained" onClick={() => { setSectionalShow(true)}}> Parçalı <br/> İade</Button>
 
         </Col>
 
@@ -366,8 +355,8 @@ const [returnShow,setReturnShow] = useState(false)
               isSearchable
               name="exitReason"
               options={customerList}
-              onChange={(e) => {if(e === null){setCustomer({label:null,value:null})}else{setCustomer(e)}}}
-              value={customer?.value === null ? null : customerList.find(item => item.value === customer?.value) }
+              onChange={(e) => {if(e === null){setCustomer('')}else{setCustomer(e.value)}}}
+              value={customer === '' ? null : customerList.find(item => item.value === customer) }
               styles={{
                 control: (provided) => ({
                   ...provided,
@@ -379,8 +368,7 @@ const [returnShow,setReturnShow] = useState(false)
             /></div>
         </Col>
         <Col xs={5} className='d-flex justify-content-between custom-col p-3'>
-          <Button color="success" sx={{ color: '#fff' }} variant="contained" onClick={()=>setShow(true)}> Müşteri Ekle</Button>
-          <Button color="error" variant="contained" onClick={()=>setReturnShow(true)} > İade Oluştur</Button>
+        <Button color="success" variant="contained" sx={{ color: '#fff' }} onClick={()=>props.setReturnShow(false)}> Satış Ekranına Dön</Button>
           <Button color="primary" variant="contained" onClick={()=>setSalesListShow(true)}> Satış Listesine Git</Button>
           <Button color="warning" sx={{ color: '#fff' }} variant="contained"> Yazdır</Button>
         </Col>
@@ -454,12 +442,11 @@ const [returnShow,setReturnShow] = useState(false)
 
         </Col>
       </Row></div>
-      <CustomerInsert show={show} setShow={setShow} setNewCustomerId={setCustomer} setRefresh={setRefresh}/>
+     
       <SectionalSale totalPrice={totalPrice} sectionalShow={sectionalShow} setSectionalShow={setSectionalShow} handleSave={handleSave}/>
       <SalesList show={salesListShow} setShow={setSalesListShow} refresh={refresh}/>
-      <ReturnSale returnShow={returnShow} setReturnShow={setReturnShow}/>
     </>
   )
 }
 
-export default Sales;
+export default ReturnSale;

@@ -23,3 +23,47 @@ button.p-button.p-component{
     margin-left: 5px !important;
     margin-right: 5px !important;
 }
+.d-flex.justify-content-between.custom-col.col{
+
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+
+.d-flex.justify-content-between.custom-col.col-5{
+
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+.d-flex.justify-content-between.custom-col.col-7{
+
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+.d-flex.justify-content-begin.custom-col.col{
+
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+.custom-col.p-3.col-8{
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+
+.custom-col.p-3.col{
+    background-color: #fff !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+
+

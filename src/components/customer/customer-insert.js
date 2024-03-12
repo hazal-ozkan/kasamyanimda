@@ -26,7 +26,7 @@ export default function CustomerInsert(props) {
 
         try {
             const apiUrl = `https://localhost:44344/register`;
-             await axios.post(apiUrl,customer, {
+           const response =  await axios.post(apiUrl,customer, {
                 withCredentials: true,
                 headers: {
                     Accept: '*/*',
@@ -35,6 +35,10 @@ export default function CustomerInsert(props) {
             })
             
             toast.success("Müşteri başarıyla kaydedildi")
+            props.setNewCustomerId((prevCustomer) => ({
+                ...prevCustomer,
+                value: response.data.customerId
+            }))
             setTimeout(()=> {
                 props.setRefresh(uuidv4())
                 props.setShow(false)

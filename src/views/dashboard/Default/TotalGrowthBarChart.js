@@ -1,78 +1,95 @@
 import PropTypes from 'prop-types';
-import {  useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
-import { Grid,  Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 // third-party
-import ApexCharts from 'apexcharts';
 import Chart from 'react-apexcharts';
 
 // project imports
 import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-
-// chart data
-import chartData from './chart-data/total-growth-bar-chart';
-
+import axios from 'axios';
 
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
 const TotalGrowthBarChart = ({ isLoading }) => {
+  const [chartData, setChartData] = useState(null);
+const [totalSales,setTotalSales] = useState(0)
+  const productList = async () => {
+    try {
+      const apiUrl = `https://localhost:44344/api/Product/sales/list`;
+      const response = await axios.get(apiUrl, {
+        withCredentials: true,
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/json',
+        },
+      });
 
-  const theme = useTheme();
-  const customization = useSelector((state) => state.customization);
-
-  const { navType } = customization;
-  const { primary } = theme.palette.text;
-  const darkLight = theme.palette.dark.light;
-  const grey200 = theme.palette.grey[200];
-  const grey500 = theme.palette.grey[500];
-
-  const primary200 = theme.palette.primary[200];
-  const primaryDark = theme.palette.primary.dark;
-  const secondaryMain = theme.palette.secondary.main;
-  const secondaryLight = theme.palette.secondary.light;
+      const monthlyTotalSales = calculateMonthlyTotalSales(response.data);
+      const monthLabels = getMonthLabels();
+setTotalSales(calculateYearlyTotalSales(response.data))
+      setChartData({
+        type: 'bar',
+        xaxis: {
+          categories: monthLabels,
+        },
+        series: [
+          {
+            name: 'Toplam Satış Tutarı',
+            data: monthlyTotalSales,
+          },
+        ],
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    const newChartData = {
-      ...chartData.options,
-      colors: [primary200, primaryDark, secondaryMain, secondaryLight],
-      xaxis: {
-        labels: {
-          style: {
-            colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
-          }
-        }
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: [primary]
-          }
-        }
-      },
-      grid: {
-        borderColor: grey200
-      },
-      tooltip: {
-        theme: 'light'
-      },
-      legend: {
-        labels: {
-          colors: grey500
-        }
-      }
-    };
+    productList();
+  }, []);
 
-    // do not load chart when loading
-    if (!isLoading) {
-      ApexCharts.exec(`bar-chart`, 'updateOptions', newChartData);
+
+  const calculateYearlyTotalSales = (salesData) => {
+    let yearlyTotalSales = 0;
+  
+    salesData.forEach((sale) => {
+      const saleTotalPrice = sale.totalPrice;
+      yearlyTotalSales += saleTotalPrice;
+    });
+  
+    return yearlyTotalSales;
+  };
+  const getMonthLabels = () => {
+    const monthLabels = [];
+    for (let i = 0; i < 12; i++) {
+      const date = new Date(0);
+      date.setUTCMonth(i);
+      const monthName = date.toLocaleString('default', { month: 'long' });
+      monthLabels.push(monthName);
     }
-  }, [navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
+    return monthLabels;
+  };
+
+  const calculateMonthlyTotalSales = (salesData) => {
+    const monthlyTotalSales = Array.from({ length: 12 }, () => 0); // Ay başına sıfır ile başlat
+
+    salesData.forEach((sale) => {
+      const saleDate = new Date(sale.saleDate);
+      const saleMonth = saleDate.getMonth();
+      const saleTotalPrice = sale.totalPrice;
+
+      monthlyTotalSales[saleMonth] += saleTotalPrice;
+    });
+
+    return monthlyTotalSales;
+  };
+
+
 
   return (
     <>
@@ -89,15 +106,21 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                       <Typography variant="subtitle2">Satış Grafiği</Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h3">2,324.00₺</Typography>
+                      <Typography variant="h3">{totalSales}₺</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-               
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Chart {...chartData} />
+              {chartData && (
+                <Chart
+                  options={chartData}
+                  series={chartData.series}
+                  type={chartData.type}
+                  height="300px"
+                />
+              )}
             </Grid>
           </Grid>
         </MainCard>
@@ -107,7 +130,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 };
 
 TotalGrowthBarChart.propTypes = {
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
 };
 
 export default TotalGrowthBarChart;

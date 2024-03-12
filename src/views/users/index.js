@@ -22,7 +22,8 @@ import { v4 as uuidv4 } from 'uuid';
 const Users = () => {
   const [open, setOpen] = useState(false);
   const [roleList,setRoleList] = useState([]);
-  const [refresh,setRefresh] =useState(null)
+  const [refresh,setRefresh] =useState(null);
+  const [departmentList,setDepartmanList] = useState([]);
   const [newUserData, setNewUserData] = useState({
     name: '',
     surname: '',
@@ -66,6 +67,26 @@ const Users = () => {
       [field]: value,
     }));
   };
+
+  const getDepartman = async () => {
+    try{
+      const apiUrl = `https://localhost:44344/departments`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+        setDepartmanList(response.data.map(item => ({
+          label: item.departmenName,
+          value: item.id
+        })))
+    }catch(err){
+      console.log(err)
+    }
+  }
+ 
 
   const handleConfirm = async () => {
     try {
@@ -113,6 +134,7 @@ const Users = () => {
 useEffect(()=> {
 getroleList()
 userList()
+getDepartman()
 },[refresh])
 
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
@@ -223,6 +245,12 @@ userList()
           name="role"
           options={roleList}
           onChange={(selectedOption) => handleInputChange('role', selectedOption.label)}
+          styles={{
+            menu: provided => ({
+                ...provided,
+                zIndex: 9999, // İstediğiniz z-index değerini burada belirleyebilirsiniz
+            }),
+        }}
         />
       </div>
     </Col>
@@ -262,12 +290,18 @@ userList()
   <Row>
     <Col>
       <div className='p-2'>
-        <TextField
-          id="department"
-          label="Departman"
-          variant="outlined"
-          onChange={(e) => handleInputChange('deparment', e.target.value)}
+      <Select
+          className="basic-single"
+          classNamePrefix="select"
+          placeholder="Departman"
+          isClearable
+          isSearchable
+          name="deparment"
+          options={departmentList}
+          onChange={(selectedOption) => handleInputChange('deparment', selectedOption.label)}
+         
         />
+       
       </div>
     </Col>
   </Row>

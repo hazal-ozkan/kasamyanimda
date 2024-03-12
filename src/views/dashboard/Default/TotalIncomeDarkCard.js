@@ -10,6 +10,9 @@ import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 // styles
 const CardWrapper = styled(MainCard)(() => ({
@@ -42,6 +45,42 @@ const CardWrapper = styled(MainCard)(() => ({
 const TotalIncomeDarkCard = ({ isLoading }) => {
   const theme = useTheme();
 
+ 
+
+  // const [cashInGoing,setCashInGoing] = useState(0)
+  const [posInGoing,setPosInGoing] = useState(0)
+
+
+
+  const getInComing = async () => {
+    
+    try{
+      const apiUrl = `https://localhost:44344/api/Financial/inComing/list`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+       
+    const posOutGoingTotal = response.data
+      .filter(item => item.paymentType === 'Pos' && item.type === 'Satış')
+      .reduce((total, item) => total + item.amount, 0);
+
+    
+    setPosInGoing(posOutGoingTotal);
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+useEffect(()=>{
+  
+  getInComing()
+},[])
+
+
   return (
     <>
       {isLoading ? (
@@ -72,7 +111,7 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                   }}
                   primary={
                     <Typography variant="h4">
-                      203₺
+                      {posInGoing}₺
                     </Typography>
                   }
                   secondary={

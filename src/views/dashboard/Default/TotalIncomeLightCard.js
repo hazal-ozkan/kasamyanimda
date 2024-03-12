@@ -10,6 +10,9 @@ import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
 import PaymentsIcon from '@mui/icons-material/Payments';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 
 
 // styles
@@ -42,6 +45,39 @@ const CardWrapper = styled(MainCard)(() => ({
 
 const TotalIncomeLightCard = ({ isLoading }) => {
   const theme = useTheme();
+  const [cashInGoing,setCashInGoing] = useState(0)
+  //const [posInGoing,setPosInGoing] = useState(0)
+
+
+
+  const getInComing = async () => {
+    
+    try{
+      const apiUrl = `https://localhost:44344/api/Financial/inComing/list`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+       
+    const posOutGoingTotal = response.data
+      .filter(item => item.paymentType === 'Nakit' && item.type === 'Satış')
+      .reduce((total, item) => total + item.amount, 0);
+
+    
+      setCashInGoing(posOutGoingTotal);
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+useEffect(()=>{
+  
+  getInComing()
+},[])
+
 
   return (
     <>
@@ -71,7 +107,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                     mt: 0.45,
                     mb: 0.45
                   }}
-                  primary={<Typography variant="h4">203₺</Typography>}
+                  primary={<Typography variant="h4">{cashInGoing}₺</Typography>}
                   secondary={
                     <Typography
                       variant="subtitle2"

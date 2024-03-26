@@ -18,6 +18,7 @@ import Select from 'react-select'
 import { Row,Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
+import { SHA256 } from 'crypto-js';
 
 const Users = () => {
   const [open, setOpen] = useState(false);
@@ -47,7 +48,7 @@ const Users = () => {
   const userList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Auth/usersCase`;
+      const apiUrl = `http://72.167.148.55:35627/api/Auth/usersCase`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -70,7 +71,7 @@ const Users = () => {
 
   const getDepartman = async () => {
     try{
-      const apiUrl = `https://localhost:44344/departments`;
+      const apiUrl = `http://72.167.148.55:35627/departments`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -90,7 +91,7 @@ const Users = () => {
 
   const handleConfirm = async () => {
     try {
-      const apiUrl = `https://localhost:44344/api/Auth/userCase/register`;
+      const apiUrl = `http://72.167.148.55:35627/api/Auth/userCase/register`;
        await axios.post(apiUrl,newUserData, {
           withCredentials: true,
           headers: {
@@ -114,7 +115,7 @@ const Users = () => {
   const getroleList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/roles`;
+      const apiUrl = `http://72.167.148.55:35627/roles`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -148,7 +149,9 @@ getDepartman()
     },
     { field: 'surname', headerName: 'Soyadi' },
     { field: 'username', headerName: 'Kullanıcı Adı' },
-    { field: 'password', headerName: 'Şifre' },
+    { field: 'password', headerName: 'Şifre' , cellRenderer: (params) => {
+      return SHA256(params.data.password).toString()
+    }},
     { field: 'role', headerName: 'Rolu' },
     { field: 'email', headerName: 'Mail Adresi' },
     { field: 'phone', headerName: 'Telefon Numarası' },

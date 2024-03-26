@@ -22,7 +22,7 @@ const Customers = () => {
   const customerList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/customer`;
+      const apiUrl = `http://72.167.148.55:35627/customer`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -71,6 +71,7 @@ const Customers = () => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex:1
     };
   }, []);
 

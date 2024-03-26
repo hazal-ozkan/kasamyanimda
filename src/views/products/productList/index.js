@@ -22,7 +22,7 @@ const ProductList = () => {
   const productList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Product/product/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/product/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -53,7 +53,18 @@ const ProductList = () => {
     },
     {
       field: 'productName',
-      headerName:'Ürün Adı'
+      headerName:'Ürün Adı',
+      cellRenderer:(params) => {
+        if(params.data.stock <= params.data.criticalStock){
+          return (
+            <div className='d-flex justify-content-center' style={{backgroundColor:'red', color:'#fff'}}>{params.data.productName}</div>
+          )
+        }else{
+          return(
+            <div className='d-flex justify-content-center' >{params.data.productName}</div>
+          )
+        }
+      }
     },
     {
       field: 'salesPrice',
@@ -65,7 +76,8 @@ const ProductList = () => {
     },
     {
       field: 'criticalStock',
-      headerName:'Kritik Stok'
+      headerName:'Kritik Stok',
+      
     },
     
   ];
@@ -74,6 +86,7 @@ const ProductList = () => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex:1
     };
   }, []);
 

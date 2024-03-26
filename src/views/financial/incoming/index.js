@@ -24,7 +24,7 @@ const Incoming = () => {
 
   const inComingList = async () => {
     try{
-      const apiUrl = `https://localhost:44344/api/Financial/inComing/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Financial/inComing/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -132,7 +132,7 @@ const Incoming = () => {
         </Button></Col>
         </Row>
 
-      <div className="ag-theme-quartz" style={{ height: 500 }}>
+      <div className="ag-theme-quartz" style={{ height: 580 }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
@@ -140,8 +140,8 @@ const Incoming = () => {
           rowSelection="multiple"
           suppressRowClickSelection={true}
           pagination={true}
-          paginationPageSize={500}
-          paginationPageSizeSelector={[200, 500, 1000]}
+          paginationPageSize={10}
+          paginationPageSizeSelector={false}
         />
       </div>
       <InComingInsert show={show} setShow={setShow} setRefresh={setRefresh} />

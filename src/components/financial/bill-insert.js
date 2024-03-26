@@ -25,7 +25,7 @@ const BillInsert = (props) => {
     const[company,setCompany] = useState('')
 
     const [action, setAction] = useState({
-        
+        productId:'',
         productName: '',
         barcode: '',
         quantity: 0,
@@ -37,7 +37,7 @@ const BillInsert = (props) => {
  
     const getProductByBarcode = async (barcode) => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/GetProductByBarcode?barcode=${barcode}`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductByBarcode?barcode=${barcode}`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -59,7 +59,7 @@ const BillInsert = (props) => {
     const getProductById = async (id) => {
       
         try {
-            const apiUrl = `https://localhost:44344/api/Product/GetProductById?id=${id}`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductById?id=${id}`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -80,7 +80,7 @@ const BillInsert = (props) => {
 
     const ProductList = async () => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/product/list`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/product/list`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -99,7 +99,7 @@ const BillInsert = (props) => {
 
     const getDepartman = async () => {
         try{
-          const apiUrl = `https://localhost:44344/departments`;
+          const apiUrl = `http://72.167.148.55:35627/departments`;
             const response = await axios.get(apiUrl, {
               withCredentials: true,
                 headers: {
@@ -138,7 +138,7 @@ const BillInsert = (props) => {
             products: actionList
         }
         try {
-            const apiUrl = `https://localhost:44344/api/Financial/create/bill`;
+            const apiUrl = `http://72.167.148.55:35627/api/Financial/create/bill`;
             await axios.post(apiUrl, data, {
                 withCredentials: true,
                 headers: {
@@ -177,6 +177,8 @@ const BillInsert = (props) => {
                 [field]: isoDate,
             }));
         } 
+
+        console.log(field,value)
         setAction((prev) => ({
             ...prev,
             [field]: value
@@ -186,6 +188,7 @@ const BillInsert = (props) => {
     const handleAddAction = () => {
         setActionList((prev) => [...prev, action]);
         setAction({
+            productId:'',
             productName: '',
         barcode: '',
         quantity: 0,
@@ -328,9 +331,15 @@ const BillInsert = (props) => {
                             isClearable
                             isSearchable
                             name="productId"
-                            value={productList.find(item => item.value === action.productId)}
+                            value={action?.productId === '' ? '' :  productList.find(item => item.value === action.productId)}
                             options={productList}
-                            onChange={(e) => {getProductById(e.value), handleInputChange('productName', e.label) }}
+                            onChange={(e) => {
+                                if(e===null){
+                                    handleInputChange('productId', '')
+                                }else{
+                                    getProductById(e.value), handleInputChange('productName', e.label)
+                                }
+                                }}
                             styles={{
                                 menu: provided => ({
                                     ...provided,
@@ -350,8 +359,9 @@ const BillInsert = (props) => {
                         <TextField
                             id="quantity"
                             type='number'
-                            label="Birim Fiyat"
+                            label="Alış Fiyatı"
                             variant="standard"
+                            value={action.unitPrice}
                             onChange={(e) => handleInputChange('unitPrice', e.target.value)}
                         />
                     </div>
@@ -363,7 +373,8 @@ const BillInsert = (props) => {
                             type='number'
                             label="Miktar"
                             variant="standard"
-                            onChange={(e) => handleInputChange('quantity', e.target.value)}
+                            value={action.quantity}
+                            onChange={(e) => {handleInputChange('quantity', e.target.value); handleInputChange('totalPrice',e.target.value * action?.unitPrice)}}
                         />
                     </div>
                 </Col>
@@ -376,7 +387,7 @@ const BillInsert = (props) => {
                             variant="standard"
                             disabled
                             value={action?.quantity * action?.unitPrice}
-                            onChange={() => handleInputChange('totalPrice',action?.quantity * action?.unitPrice)}
+                           
                         />
                     </div>
                 </Col>

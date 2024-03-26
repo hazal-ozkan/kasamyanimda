@@ -16,7 +16,7 @@ const ProductEntryInsert = (props) => {
     const [sound, setSound] = useState(null);
     const [productList, setProductList] = useState([]);
     const [actionList, setActionList] = useState([]);
-
+    const [departmentList,setDepartmentList] = useState([]);
     const [action, setAction] = useState({
         productId: '',
         productName: '',
@@ -24,6 +24,8 @@ const ProductEntryInsert = (props) => {
         quantity: 0,
         entryReason: '',
         date: '',
+        destination:'',
+        destinationId:'',
         tenant: 'KasamYanimda'
     });
 
@@ -34,7 +36,7 @@ const ProductEntryInsert = (props) => {
 
     const getProductByBarcode = async (barcode) => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/GetProductByBarcode?barcode=${barcode}`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductByBarcode?barcode=${barcode}`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -56,7 +58,7 @@ const ProductEntryInsert = (props) => {
     const getProductById = async (id) => {
       
         try {
-            const apiUrl = `https://localhost:44344/api/Product/GetProductById?id=${id}`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductById?id=${id}`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -77,7 +79,7 @@ const ProductEntryInsert = (props) => {
 
     const ProductList = async () => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/product/list`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/product/list`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -94,8 +96,28 @@ const ProductEntryInsert = (props) => {
         }
     };
 
+    const DepartmentList = async () => {
+        try {
+            const apiUrl = `http://72.167.148.55:35627/departments`;
+            const response = await axios.get(apiUrl, {
+                withCredentials: true,
+                headers: {
+                    Accept: '*/*',
+                    'Content-Type': 'application/json'
+                }
+            });
+            setDepartmentList(response.data.map((item) => ({
+                label: item.departmenName,
+                value: item.id
+            })));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         ProductList();
+        DepartmentList();
     }, []);
 
     const handleDeleteAction = (index) => {
@@ -106,7 +128,7 @@ const ProductEntryInsert = (props) => {
 
     const handleSave = async () => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/stock/entry`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/stock/entry`;
             await axios.post(apiUrl, { "StockEntries":actionList}, {
                 withCredentials: true,
                 headers: {
@@ -212,7 +234,14 @@ const ProductEntryInsert = (props) => {
                             isSearchable
                             name="entryReason"
                             options={exitReasonList}
-                            onChange={(e) =>{handleInputChange('entryReason', e.label); console.log(action)} }
+                            value={action?.entryReason === '' ? '' : exitReasonList.find(item=> item.value === action?.entryReasonId)}
+                            onChange={(e) =>{
+                                if(e === null){
+                                    handleInputChange('entryReason', '')
+                                }else{
+                                    handleInputChange('entryReason', e.label);handleInputChange('entryReasonId', e.value); console.log(action)
+                                }
+                               } }
                             styles={{
                                 menu: provided => ({
                                     ...provided,
@@ -227,6 +256,40 @@ const ProductEntryInsert = (props) => {
                         />
                     </div>
                 </Col>
+                {action?.entryReason === 'Transferle geldi'  &&(
+ <Col>
+ <div className='p-2'>
+     <Select
+         className="basic-single"
+         classNamePrefix="select"
+         placeholder="Transfer Yeri"
+         isClearable
+         isSearchable
+         name="destination"
+         options={departmentList}
+         value={action?.destination === '' ? '' : departmentList.find(item=> item.value === action?.destinationId)}
+         onChange={(e) =>{
+             if(e === null){
+                 handleInputChange('destination', '')
+             }else{
+                handleInputChange('destination', e.label);handleInputChange('destinationId', e.value); console.log(action)
+             }
+            } }
+         styles={{
+             menu: provided => ({
+                 ...provided,
+                 zIndex: 9999,
+                 maxHeight: '100px',
+             }),
+             menuList: (provided) => ({
+                 ...provided,
+                 maxHeight: '80px',
+             }),
+         }}
+     />
+ </div>
+</Col>
+                )}
                 <Col>
                     <div >
                         <TextField

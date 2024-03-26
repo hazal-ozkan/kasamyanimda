@@ -6,6 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Button, TextField } from '@mui/material';
 import { Col, Row } from 'react-bootstrap';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 export default function SectionalSale(props) {
@@ -47,7 +48,14 @@ export default function SectionalSale(props) {
                             type="number"
                             label="Nakit"
                             variant="outlined"
-                            onChange={(e)=>{setCash(e.target.value);handleInputChange(e)}}
+                            onChange={(e)=>{
+                                if(e.target.value < props.totalPrice){
+                                    setCash(e.target.value);
+                                    handleInputChange(e)
+                                }else{
+                                    toast.warning("Tutardan yüksek nakit girişi yapamazsınız!")
+                                }
+                                }}
                         />
                     </div>
                 </Col>
@@ -59,7 +67,14 @@ export default function SectionalSale(props) {
                             label="Pos"
                             
                             variant="outlined"
-                            onChange={(e)=>{console.log(e.target);handleInputChange(e);setPos(e.target.value)}}
+                            onChange={(e)=>{
+                                if(e.target.value < props.totalPrice){
+                                    setPos(e.target.value)
+                                    handleInputChange(e)
+                                }else{
+                                    toast.warning("Tutardan yüksek pos girişi yapamazsınız!")
+                                }
+                               }}
                         />
                     </div>
                 </Col>

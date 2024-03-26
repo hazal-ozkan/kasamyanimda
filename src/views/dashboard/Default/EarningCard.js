@@ -62,7 +62,7 @@ const EarningCard = ({ isLoading }) => {
   const getOutGoing = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Financial/outGoing/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Financial/outGoing/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -81,7 +81,7 @@ const EarningCard = ({ isLoading }) => {
   const getInComing = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Financial/inComing/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Financial/inComing/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -131,7 +131,7 @@ useEffect(()=>{
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{inComing-outGoing}₺</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{(inComing-outGoing).toFixed(2)}₺</Typography>
                   </Grid>
                  
                 </Grid>

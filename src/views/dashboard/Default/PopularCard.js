@@ -23,7 +23,7 @@ const PopularCard = ({ isLoading }) => {
  const [popularProduct,setPopularProduct] = useState([])
  const productList = async () => {
   try {
-    const apiUrl = `https://localhost:44344/api/Product/sales/list`;
+    const apiUrl = `http://72.167.148.55:35627/api/Product/sales/list`;
     const response = await axios.get(apiUrl, {
       withCredentials: true,
       headers: {
@@ -38,19 +38,24 @@ const PopularCard = ({ isLoading }) => {
 
       // Satışları dön
       response.data.forEach((sale) => {
-        // Satışın ürünlerini dön
-        sale.items.forEach((item) => {
-          const productId = item.productId;
-          const productName = item.productName;
-          const quantity = item.quantity;
+        // Satışın tarihini al
+        const saleDate = new Date(sale.saleDate);
+        // Bugünün tarihine eşit olanları işle
+        if (isToday(saleDate)) {
+          // Satışın ürünlerini dön
+          sale.items.forEach((item) => {
+            const productId = item.productId;
+            const productName = item.productName;
+            const quantity = item.quantity;
 
-          // Eğer ürün daha önce eklenmediyse ekleyerek quantity'yi set et
-          if (!productTotals[productId]) {
-            productTotals[productId] = { productName, quantity };
-          } else {
-            productTotals[productId].quantity += quantity;
-          }
-        });
+            // Eğer ürün daha önce eklenmediyse ekleyerek quantity'yi set et
+            if (!productTotals[productId]) {
+              productTotals[productId] = { productName, quantity };
+            } else {
+              productTotals[productId].quantity += quantity;
+            }
+          });
+        }
       });
 
       // Toplam quantity'ye göre ürünleri sırala
@@ -63,6 +68,14 @@ const PopularCard = ({ isLoading }) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+// Bugünün tarihine eşit olup olmadığını kontrol eden yardımcı bir fonksiyon
+const isToday = (someDate) => {
+  const today = new Date();
+  return someDate.getDate() === today.getDate() &&
+         someDate.getMonth() === today.getMonth() &&
+         someDate.getFullYear() === today.getFullYear();
 };
 
   

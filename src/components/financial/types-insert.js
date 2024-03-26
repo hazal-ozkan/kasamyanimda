@@ -26,7 +26,7 @@ export default function TypesInsert(props) {
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/api/Financial/register`;
+            const apiUrl = `http://72.167.148.55:35627/api/Financial/register`;
              await axios.post(apiUrl,type, {
                 withCredentials: true,
                 headers: {

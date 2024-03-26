@@ -25,7 +25,7 @@ export default function CustomerInsert(props) {
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/register`;
+            const apiUrl = `http://72.167.148.55:35627/register`;
            const response =  await axios.post(apiUrl,customer, {
                 withCredentials: true,
                 headers: {

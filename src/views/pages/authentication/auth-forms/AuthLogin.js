@@ -53,15 +53,15 @@ const FirebaseLogin = ({ ...others }) => {
 
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null,
         }}
        
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
       
 try {
-  const response = await axios.post('https://localhost:44344/api/Auth/case/login', {
+  const response = await axios.post('http://72.167.148.55:35627/api/Auth/case/login', {
     username: values.email,
     password: values.password,
   }, {

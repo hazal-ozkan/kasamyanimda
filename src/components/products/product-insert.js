@@ -21,6 +21,7 @@ const [sound,setSound] = useState(null)
 
 const [salesPrice, setSalesPrice] = useState('');
   const [buyingPrice, setBuyingPrice] = useState('');
+  const [unitList,setUnitList] = useState([]);
 const [product,setProduct] = useState({
     productName:'',
     stock:0,
@@ -43,27 +44,49 @@ const onUploadHandler = (event) => {
    
     handleInputChange('pictures',response)
   };
-    const unitList = [
-        { label: "Adet", value: "1" },
-        { label: "Gram", value: "2" },
-        { label: "Kasa 20'li", value: "3" },
-        { label: "Kasa 24'lü", value: "4" },
-        { label: "Kilogram", value: "5" },
-        { label: "Koli 12'li", value: "1" },
-        { label: "Koli 16'li", value: "1" },
-        { label: "Koli 8'li", value: "1" },
-        { label: "Paket", value: "1" },
-        { label: "Paket 12'li", value: "1" },
-        { label: "Paket 6'lı", value: "1" },
+ 
+  const variantList = async () => {
+    
+    try{
+      const apiUrl = `http://72.167.148.55:35627/api/Product/variant/list`;
+        const response = await axios.get(apiUrl, {
+          withCredentials: true,
+            headers: {
+             Accept:'*/*',
+             'Content-Type': 'application/json'
+            }
+        })
+        setUnitList(response.data.map(item => ({
+            label:item.variantName,
+            value:item.id
+        })))
+    }catch(err){
+      console.log(err)
+    }
+  }
 
-
-
-    ]
-
+    const getProductById = async (barcode) => {
+      
+        try {
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductByBarcode?barcode=${barcode}`;
+            const response = await axios.get(apiUrl, {
+                withCredentials: true,
+                headers: {
+                    Accept: '*/*',
+                    'Content-Type': 'application/json'
+                }
+            });
+           if(response?.data?.length > 0){
+            toast.warning("Bu ürün sisteminizde mevcut , dilerseniz stok girişi ekranından giriş sağlayabilirsiniz!")
+           }
+        } catch (err) {
+            console.log(err);
+        }
+    };
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/api/Product/register`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/register`;
             await axios.post(apiUrl, product, {
                 withCredentials: true,
                 headers: {
@@ -92,7 +115,7 @@ const onUploadHandler = (event) => {
           src: [soundPath],
         }))
     
-       
+       variantList()
      
       }, [])
 
@@ -143,7 +166,7 @@ const onUploadHandler = (event) => {
                     <Card>
                         <CardContent>
                             <QrCode2Icon sx={{ color: 'action.active', mr: 1, my: 0.5, fontSize: '40px' }} />
-                            <TextField id="barcode" label="Barkod" variant="standard" onChange={(e)=>{playSound();handleInputChange('barcode',e.target.value)}}/>
+                            <TextField id="barcode" label="Barkod" variant="standard" onChange={(e)=>{playSound();getProductById(e.target.value);handleInputChange('barcode',e.target.value)}}/>
                         </CardContent>
                     </Card>
                 </Col>
@@ -306,7 +329,7 @@ const onUploadHandler = (event) => {
                             </Grid>
                             <Row className='mt-4'>
                                 <Col>
-                                <FileUpload name="file" url={'https://localhost:44344/api/Files'}  accept="image/*" maxFileSize={1000000} emptyTemplate={<p className="m-0">Resmi sürükleyip bırakarak da yükleyebilirsiniz.</p>} onUpload={onUploadHandler} />
+                                <FileUpload name="file" url={'http://72.167.148.55:35627/api/Files'}  accept="image/*" maxFileSize={1000000} emptyTemplate={<p className="m-0">Resmi sürükleyip bırakarak da yükleyebilirsiniz.</p>} onUpload={onUploadHandler} />
                                 </Col>
                             </Row>
                         </CardContent>

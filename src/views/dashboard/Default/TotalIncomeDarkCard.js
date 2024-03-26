@@ -55,7 +55,7 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
   const getInComing = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Financial/inComing/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Financial/inComing/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {

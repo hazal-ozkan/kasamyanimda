@@ -26,7 +26,7 @@ export default function OutGoingInsert(props) {
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/api/Financial/register/OutGoing`;
+            const apiUrl = `http://72.167.148.55:35627/api/Financial/register/OutGoing`;
              await axios.post(apiUrl,outGoing, {
                 withCredentials: true,
                 headers: {
@@ -51,7 +51,7 @@ export default function OutGoingInsert(props) {
             const getTypeList = async () => {
                 try{ 
                     
-                    const apiUrl = `https://localhost:44344/api/Financial/type/list`;
+                    const apiUrl = `http://72.167.148.55:35627/api/Financial/type/list`;
                 const response = await axios.get(apiUrl, {
                   withCredentials: true,
                     headers: {

@@ -62,7 +62,7 @@ const [user,setUser] = useState(null)
     const token = localStorage.getItem("token")
     const id = parseJwt(token).sub
     try{
-      const apiUrl = `https://localhost:44344/api/Auth/getUserByIdCase/${id}`;
+      const apiUrl = `http://72.167.148.55:35627/api/Auth/getUserByIdCase/${id}`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {

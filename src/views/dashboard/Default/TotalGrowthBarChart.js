@@ -20,7 +20,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 const [totalSales,setTotalSales] = useState(0)
   const productList = async () => {
     try {
-      const apiUrl = `https://localhost:44344/api/Product/sales/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/sales/list`;
       const response = await axios.get(apiUrl, {
         withCredentials: true,
         headers: {
@@ -58,11 +58,11 @@ setTotalSales(calculateYearlyTotalSales(response.data))
     let yearlyTotalSales = 0;
   
     salesData.forEach((sale) => {
-      const saleTotalPrice = sale.totalPrice;
+      const saleTotalPrice = parseFloat(sale.totalPrice.toFixed(2));
       yearlyTotalSales += saleTotalPrice;
     });
   
-    return yearlyTotalSales;
+    return yearlyTotalSales.toFixed(2);
   };
   const getMonthLabels = () => {
     const monthLabels = [];
@@ -77,18 +77,18 @@ setTotalSales(calculateYearlyTotalSales(response.data))
 
   const calculateMonthlyTotalSales = (salesData) => {
     const monthlyTotalSales = Array.from({ length: 12 }, () => 0); // Ay başına sıfır ile başlat
-
+  
     salesData.forEach((sale) => {
       const saleDate = new Date(sale.saleDate);
       const saleMonth = saleDate.getMonth();
-      const saleTotalPrice = sale.totalPrice;
-
+      const saleTotalPrice = parseFloat(sale.totalPrice.toFixed(2)); // Virgülden sonra en fazla 2 rakamı dahil eder
+  
       monthlyTotalSales[saleMonth] += saleTotalPrice;
     });
-
+  
     return monthlyTotalSales;
   };
-
+  
 
 
   return (
@@ -113,14 +113,34 @@ setTotalSales(calculateYearlyTotalSales(response.data))
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {chartData && (
-                <Chart
-                  options={chartData}
-                  series={chartData.series}
-                  type={chartData.type}
-                  height="300px"
-                />
-              )}
+            {chartData && (
+  <Chart
+    options={{
+      ...chartData,
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val.toFixed(2) + "₺";
+          },
+        },
+      },
+      yaxis: {
+        labels: {
+          formatter: function (val) {
+            return val.toFixed(2);
+          },
+        },
+      },
+      dataLabels: {
+        enabled: false, // Sütunların üstünde herhangi bir şey göstermeyecek şekilde devre dışı bırakıldı
+      },
+    }}
+    series={chartData.series}
+    type={chartData.type}
+    height="300px"
+  />
+)}
+
             </Grid>
           </Grid>
         </MainCard>

@@ -27,7 +27,7 @@ export default function InComingInsert(props) {
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/api/Financial/register/inComing`;
+            const apiUrl = `http://72.167.148.55:35627/api/Financial/register/inComing`;
             await axios.post(apiUrl, inComing, {
                 withCredentials: true,
                 headers: {
@@ -54,7 +54,7 @@ getTypeList()
 const getTypeList = async () => {
     try{ 
         
-        const apiUrl = `https://localhost:44344/api/Financial/type/list`;
+        const apiUrl = `http://72.167.148.55:35627/api/Financial/type/list`;
     const response = await axios.get(apiUrl, {
       withCredentials: true,
         headers: {

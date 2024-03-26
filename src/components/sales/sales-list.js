@@ -24,7 +24,7 @@ const SalesList = (props) => {
   const stockEntryList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Product/sales/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/sales/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {

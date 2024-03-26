@@ -73,9 +73,9 @@ const MonthlyReports = () => {
 
   const fetchData = async () => {
     try {
-      const salesApiUrl = `https://localhost:44344/api/Product/sales/list`;
-      const inComingApiUrl = `https://localhost:44344/api/Financial/inComing/list`;
-      const outGoingApiUrl = `https://localhost:44344/api/Financial/outGoing/list`;
+      const salesApiUrl = `http://72.167.148.55:35627/api/Product/sales/list`;
+      const inComingApiUrl = `http://72.167.148.55:35627/api/Financial/inComing/list`;
+      const outGoingApiUrl = `http://72.167.148.55:35627/api/Financial/outGoing/list`;
 
       const [salesResponse, inComingResponse, outGoingResponse] = await Promise.all([
         axios.get(salesApiUrl, { withCredentials: true, headers: { Accept: '*/*', 'Content-Type': 'application/json' } }),
@@ -195,6 +195,7 @@ const MonthlyReports = () => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex:1
     };
   }, []);
 
@@ -239,7 +240,7 @@ const MonthlyReports = () => {
     <div>
       <Row className="custom-row-report p-3">
         <Col>
-          <h5>Günlük Rapor</h5>
+          <h5>Aylık Rapor</h5>
         </Col>
         <Col className="d-flex justify-content-end">
           <Button color="warning" sx={{ color: '#fff' }} variant="contained">
@@ -258,14 +259,14 @@ const MonthlyReports = () => {
           rowSelection="multiple"
           suppressRowClickSelection={true}
           pagination={true}
-          paginationPageSize={500}
-          paginationPageSizeSelector={[200, 500, 1000]}
+          paginationPageSize={5}
+          paginationPageSizeSelector={5}
           domLayout="autoHeight"
           suppressHorizontalScroll={true}
           suppressVerticalScroll={true}
         />
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '150px', marginLeft: '20px', marginRight: '20px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '200px', marginLeft: '20px', marginRight: '20px' }}>
         {cardContents.map((card, index) => (
           <CustomCard key={index} title={card.title} amount={card.amount} details={card.details} />
         ))}

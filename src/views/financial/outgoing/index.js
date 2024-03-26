@@ -26,7 +26,7 @@ const Outgoing = () => {
 
   const outGoingList = async () => {
     try{
-      const apiUrl = `https://localhost:44344/api/Financial/outGoing/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Financial/outGoing/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -131,7 +131,7 @@ const Outgoing = () => {
         </Button></Col>
         </Row>
 
-      <div className="ag-theme-quartz" style={{ height: 500 }}>
+      <div className="ag-theme-quartz" style={{ height: 580 }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
@@ -139,8 +139,8 @@ const Outgoing = () => {
           rowSelection="multiple"
           suppressRowClickSelection={true}
           pagination={true}
-          paginationPageSize={500}
-          paginationPageSizeSelector={[200, 500, 1000]}
+          paginationPageSize={10}
+          paginationPageSizeSelector={false}
         />
       </div>
       <OutGoingInsert show={show} setShow={setShow} setRefresh={setRefresh} />

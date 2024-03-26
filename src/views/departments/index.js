@@ -18,7 +18,7 @@ const Departments = () => {
   const departmentList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/departments`;
+      const apiUrl = `http://72.167.148.55:35627/departments`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {

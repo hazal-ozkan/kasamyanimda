@@ -24,7 +24,7 @@ const ProductOutput = () => {
   const stockExistList = async () => {
     
     try{
-      const apiUrl = `https://localhost:44344/api/Product/stockExist/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/stockExist/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {

@@ -27,7 +27,7 @@ export default function DepartmentInsert(props) {
     const userList = async () => {
     
         try{
-          const apiUrl = `https://localhost:44344/api/Auth/usersCase`;
+          const apiUrl = `http://72.167.148.55:35627/api/Auth/usersCase`;
             const response = await axios.get(apiUrl, {
               withCredentials: true,
                 headers: {
@@ -46,7 +46,7 @@ export default function DepartmentInsert(props) {
     const handleSave = async () => {
 
         try {
-            const apiUrl = `https://localhost:44344/api/Auth/department/register`;
+            const apiUrl = `http://72.167.148.55:35627/api/Auth/department/register`;
             await axios.post(apiUrl, department, {
                 withCredentials: true,
                 headers: {

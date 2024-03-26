@@ -84,7 +84,7 @@ const [salesListShow,setSalesListShow] = useState(false)
       }
      
 
-      const apiUrl = `https://localhost:44344/api/Product/returnSale`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/returnSale`;
       await axios.post(apiUrl, updatedSaleData, {
         withCredentials: true,
         headers: {
@@ -119,7 +119,7 @@ const [salesListShow,setSalesListShow] = useState(false)
 
   const getProduct = async () => {
     try {
-      const apiUrl = `https://localhost:44344/api/Product/product/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/product/list`;
       const response = await axios.get(apiUrl, {
         withCredentials: true,
         headers: {
@@ -154,7 +154,7 @@ const [salesListShow,setSalesListShow] = useState(false)
 
   const getProductByBarcode = async (barcode) => {
     try {
-      const apiUrl = `https://localhost:44344/api/Product/GetProductByBarcode?barcode=${barcode}`;
+      const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductByBarcode?barcode=${barcode}`;
       const response = await axios.get(apiUrl, {
         withCredentials: true,
         headers: {
@@ -263,7 +263,7 @@ const [salesListShow,setSalesListShow] = useState(false)
 
   const getCustomerList = async () => {
     try {
-      const apiUrl = `https://localhost:44344/customer`;
+      const apiUrl = `http://72.167.148.55:35627/customer`;
       const response = await axios.get(apiUrl, {
         withCredentials: true,
         headers: {

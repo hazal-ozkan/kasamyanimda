@@ -21,8 +21,32 @@ const Dashboard = () => {
     setLoading(false);
   }, []);
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setUser(parseJwt(token));
+    }
+  }, []);
+
+  function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+
+    const parsedData = JSON.parse(jsonPayload);
+
+    // Rol bilgisini "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" anahtarı üzerinden çıkart
+    const role = parsedData["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+    // Yeni bir nesne oluşturup rol bilgisini ekleyerek döndür
+    return { ...parsedData, role };
+  }
   return (
-    <Grid container spacing={gridSpacing}>
+    <>
+    {user?.role === 'Patron' ?(
+      <Grid container spacing={gridSpacing}>
       <Grid item xs={12}>
         <Grid container spacing={gridSpacing}>
           <Grid item lg={4} md={6} sm={6} xs={12}>
@@ -60,6 +84,9 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Grid>
+    ):(<div>Hoşgeldiniz ! {user?.unique_name}</div>)}
+    
+    </>
   );
 };
 

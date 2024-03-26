@@ -16,7 +16,7 @@ const PurchaseBills = () => {
   };
   const customerList = async () => {
     // Müşteri listesini çekmek için axios veya başka bir servis kullanabilirsiniz.
-    // Örnek: const response = await axios.get(`https://localhost:44344/customer`);
+    // Örnek: const response = await axios.get(`http://72.167.148.55:35627/customer`);
     // setRowData(response.data);
   };
 

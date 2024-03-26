@@ -16,7 +16,7 @@ const ProductExistInsert = (props) => {
     const [sound, setSound] = useState(null);
     const [productList, setProductList] = useState([]);
     const [actionList, setActionList] = useState([]);
-
+    const [departmentList,setDepartmentList] = useState([]);
     const [action, setAction] = useState({
         productId: '',
         productName: '',
@@ -24,6 +24,8 @@ const ProductExistInsert = (props) => {
         quantity: 0,
         exitReason: '',
         date: '',
+        destination:'',
+        destinationId:'',
         tenant: 'KasamYanimda'
     });
 
@@ -34,7 +36,7 @@ const ProductExistInsert = (props) => {
 
     const getProductByBarcode = async (barcode) => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/GetProductByBarcode?barcode=${barcode}`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductByBarcode?barcode=${barcode}`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -56,7 +58,7 @@ const ProductExistInsert = (props) => {
     const getProductById = async (id) => {
       
         try {
-            const apiUrl = `https://localhost:44344/api/Product/GetProductById?id=${id}`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/GetProductById?id=${id}`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -77,7 +79,7 @@ const ProductExistInsert = (props) => {
 
     const ProductList = async () => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/product/list`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/product/list`;
             const response = await axios.get(apiUrl, {
                 withCredentials: true,
                 headers: {
@@ -94,8 +96,28 @@ const ProductExistInsert = (props) => {
         }
     };
 
+    const DepartmentList = async () => {
+        try {
+            const apiUrl = `http://72.167.148.55:35627/departments`;
+            const response = await axios.get(apiUrl, {
+                withCredentials: true,
+                headers: {
+                    Accept: '*/*',
+                    'Content-Type': 'application/json'
+                }
+            });
+            setDepartmentList(response.data.map((item) => ({
+                label: item.departmenName,
+                value: item.id
+            })));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         ProductList();
+        DepartmentList();
     }, []);
 
     const handleDeleteAction = (index) => {
@@ -106,7 +128,7 @@ const ProductExistInsert = (props) => {
 
     const handleSave = async () => {
         try {
-            const apiUrl = `https://localhost:44344/api/Product/stock/exit`;
+            const apiUrl = `http://72.167.148.55:35627/api/Product/stock/exit`;
             await axios.post(apiUrl, { "stockExits":actionList}, {
                 withCredentials: true,
                 headers: {
@@ -185,7 +207,7 @@ const ProductExistInsert = (props) => {
                             isClearable
                             isSearchable
                             name="productId"
-                            value={productList.find(item => item.value === action.productId)}
+                            value={action?.productId === '' ? '' : productList.find(item => item.value === action.productId)}
                             options={productList}
                             onChange={(e) => {getProductById(e.value), handleInputChange('productId', e.value), handleInputChange('productName', e.label) }}
                             styles={{
@@ -212,7 +234,14 @@ const ProductExistInsert = (props) => {
                             isSearchable
                             name="exitReason"
                             options={exitReasonList}
-                            onChange={(e) =>{handleInputChange('exitReason', e.label); console.log(action)} }
+                            value={action?.exitReason === '' ? '' : exitReasonList.find(item=> item.value === action?.exitReasonId)}
+                            onChange={(e) =>{
+                                if(e === null){
+                                    handleInputChange('exitReason', '')
+                                }else{
+                                    handleInputChange('exitReason', e.label);handleInputChange('exitReasonId', e.value); console.log(action)
+                                }
+                               } }
                             styles={{
                                 menu: provided => ({
                                     ...provided,
@@ -227,6 +256,41 @@ const ProductExistInsert = (props) => {
                         />
                     </div>
                 </Col>
+                {action?.exitReason === 'Transfer Edildi'  &&(
+ <Col>
+ <div className='p-2'>
+     <Select
+         className="basic-single"
+         classNamePrefix="select"
+         placeholder="Transfer Yeri"
+         isClearable
+         isSearchable
+         name="destination"
+         options={departmentList}
+         value={action?.destination === '' ? '' : departmentList.find(item=> item.value === action?.destinationId)}
+         onChange={(e) =>{
+             if(e === null){
+                 handleInputChange('destination', '')
+             }else{
+                handleInputChange('destination', e.label);handleInputChange('destinationId', e.value); console.log(action)
+             }
+            } }
+         styles={{
+             menu: provided => ({
+                 ...provided,
+                 zIndex: 9999,
+                 maxHeight: '100px',
+             }),
+             menuList: (provided) => ({
+                 ...provided,
+                 maxHeight: '80px',
+             }),
+         }}
+     />
+ </div>
+</Col>
+                )}
+               
                 <Col>
                     <div >
                         <TextField
@@ -234,6 +298,7 @@ const ProductExistInsert = (props) => {
                             type='number'
                             label="Çıkış Adedi"
                             variant="standard"
+                            value={action.quantity}
                             onChange={(e) => handleInputChange('quantity', e.target.value)}
                         />
                     </div>
@@ -243,6 +308,7 @@ const ProductExistInsert = (props) => {
                         <TextField
                             label="Çıkış Tarihi"
                             type="date"
+                            value={action.date}
                             onChange={(selectedOption) => handleInputChange('date', selectedOption.target.value)}
                             InputLabelProps={{
                                 shrink: true,

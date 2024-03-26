@@ -6,6 +6,7 @@ import { Col, Row } from 'react-bootstrap';
 import { Button } from '@mui/material';
 import BillInsert from 'components/financial/bill-insert';
 import axios from 'axios';
+import moment from 'moment';
 
 const PurchaseBills = () => {
   const [refresh,setRefresh] = useState(null);
@@ -14,7 +15,7 @@ const PurchaseBills = () => {
 
   const billList = async () => {
     try{
-      const apiUrl = `https://localhost:44344/api/Financial/bill/list`;
+      const apiUrl = `http://72.167.148.55:35627/api/Financial/bill/list`;
         const response = await axios.get(apiUrl, {
           withCredentials: true,
             headers: {
@@ -50,6 +51,9 @@ const PurchaseBills = () => {
     {
       field: 'date',
       headerName: 'Oluşturulma Tarihi',
+      cellRenderer: (params) => {
+        return moment(params.data.date).format("DD-MM-YYYY")
+      }
     },
     {
       field: 'paymentType',
@@ -76,6 +80,7 @@ const PurchaseBills = () => {
     return {
       filter: 'agTextColumnFilter',
       floatingFilter: true,
+      flex:1
     };  }, []);
 
   
